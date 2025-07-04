@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>LearnX - View My Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            min-height: 100vh;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .form-container {
+            max-width: 800px;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: relative;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .field-group {
+            margin-bottom: 1rem;
+        }
+        .field-label {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .field-value, .field-input, select, textarea {
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            display: block;
+            width: 100%;
+            overflow-wrap: break-word;
+        }
+        .field-value {
+            background: #edf2f7;
+        }
+        .field-input, select, textarea {
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .sub-section {
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid #e2e8f0;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 1rem;
+            flex-wrap: nowrap;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .update-btn {
+            background-color: #4fd1c5;
+            color: white;
+        }
+        .update-btn:hover {
+            background-color: #38b2ac;
+        }
+        .submit-btn {
+            background-color: #84cc16;
+            color: white;
+        }
+        .submit-btn:hover {
+            background-color: #68d391;
+        }
+        .save-btn {
+            background-color: #ecc94b;
+            color: white;
+        }
+        .save-btn:hover {
+            background-color: #d69e2e;
+        }
+        .hidden {
+            display: none;
+        }
+        .profile-picture {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+        }
+        .nic-image {
+            max-width: 200px;
+            height: auto;
+            margin-top: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .file-preview {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <img id="profilePicture" class="profile-picture hidden" alt="Profile Picture">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">View My Application</h1>
+    <div id="applicationData" class="space-y-6"></div>
+    <div id="buttonGroup" class="button-group">
+        <button id="updateApplication" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300
+">Update My Application</button>
+        <button id="submitApplication" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300
+">Submit My Application</button>
+        <button id="saveUpdates" class="save-btn hidden">Save Updates</button>
+    </div>
+</div>
+
+<script>
+    let isEditing = false;
+    let originalData = {};
+
+    const dropdownOptions = {
+        'personal_information.title': ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Professor', 'Other'],
+        'personal_information.work_permit': ['Yes', 'No', 'Not Applicable'],
+        'personal_information.engagement_type': ['Part-time', 'Full-time', 'Both'],
+        'personal_information.Nationality': [
+            "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Antiguan and Barbudan",
+            "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini",
+            "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese", "Bhutanese",
+            "Bolivian", "Bosnian and Herzegovinian", "Botswanan", "Brazilian", "Bruneian", "Bulgarian",
+            "Burkinabe", "Burmese", "Burundian", "Cabo Verdean", "Cambodian", "Cameroonian", "Canadian",
+            "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comoran",
+            "Congolese (Congo-Brazzaville)", "Congolese (Congo-Kinshasa)", "Costa Rican", "Croatian",
+            "Cuban", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican", "Dutch", "East Timorese",
+            "Ecuadorean", "Egyptian", "Emirati", "Equatorial Guinean", "Eritrean", "Estonian", "Eswatini",
+            "Ethiopian", "Fijian", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German",
+            "Ghanaian", "Greek", "Grenadian", "Guatemalan", "Guinean", "Guinea-Bissauan", "Guyanese",
+            "Haitian", "Honduran", "Hungarian", "Icelandic", "Indian", "Indonesian", "Iranian", "Iraqi",
+            "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian", "Kazakhstani",
+            "Kenyan", "Kiribati", "Kittitian and Nevisian", "Kuwaiti", "Kyrgyzstani", "Laotian", "Latvian",
+            "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourgish", "Malagasy",
+            "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese", "Mauritanian",
+            "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian", "Montenegrin",
+            "Moroccan", "Mozambican", "Namibian", "Nauruan", "Nepali", "New Zealander", "Nicaraguan",
+            "Nigerien", "Nigerian", "North Korean", "North Macedonian", "Norwegian", "Omani", "Pakistani",
+            "Palauan", "Palestinian", "Panamanian", "Papua New Guinean", "Paraguayan", "Peruvian",
+            "Philippine", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan", "Saint Lucian",
+            "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi Arabian", "Scottish", "Senegalese",
+            "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovak", "Slovenian",
+            "Solomon Islander", "Somali", "South African", "South Korean", "South Sudanese", "Spanish",
+            "Sri Lankan", "Sudanese", "Surinamese", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese",
+            "Tajikistani", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian and Tobagonian",
+            "Tunisian", "Turkish", "Turkmen", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan",
+            "Uzbekistani", "Vanuatuan", "Vatican", "Venezuelan", "Vietnamese", "Welsh", "Yemeni", "Zambian",
+            "Zimbabwean"
+        ],
+        'personal_information.country': [
+            'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria',
+            'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
+            'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon',
+            'Canada', 'Cape Verde', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo (Brazzaville)', 'Congo (Kinshasa)',
+            'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor',
+            'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 'Ethiopia', 'Fiji', 'Finland',
+            'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea',
+            'Guinea-Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq',
+            'Ireland', 'Israel', 'Italy', 'Ivory Coast', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati',
+            'North Korea', 'South Korea', 'Kosovo', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia',
+            'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta',
+            'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco',
+            'Mozambique', 'Myanmar', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria',
+            'North Macedonia', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru',
+            'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines',
+            'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia',
+            'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden',
+            'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia',
+            'Turkey', 'Turkmenistan', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan',
+            'Vanuatu', 'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe'
+        ],
+        'academic_qualifications.degrees.grade': ['First Class', 'Second Class Upper', 'Second Class Lower', 'Third Class', 'Pass'],
+        'sample_teaching_materials.teaching_materials.materialType': ['Document', 'Presentation', 'Video', 'Other'],
+        'availability.availability_data.contractLength': ['3 months', '6 months', '12 months', 'Other'],
+        'availability.availability_data.noticePeriod': ['1 week', '2 weeks', '1 month', 'Other'],
+        'availability.availability_data.willingnessToTravel': ['Yes', 'No', 'Limited'],
+        'payment_information.payment_currency': [
+            'United Arab Emirates Dirham (AED)', 'Afghan Afghani (AFN)', 'Albanian Lek (ALL)', 'Armenian Dram (AMD)', 'Netherlands Antillean Guilder (ANG)',
+            'Angolan Kwanza (AOA)', 'Argentine Peso (ARS)', 'Australian Dollar (AUD)', 'Aruban Florin (AWG)', 'Azerbaijani Manat (AZN)',
+            'Bosnia-Herzegovina Convertible Mark (BAM)', 'Barbadian Dollar (BBD)', 'Bangladeshi Taka (BDT)', 'Bulgarian Lev (BGN)',
+            'Bahraini Dinar (BHD)', 'Burundian Franc (BIF)', 'Bermudan Dollar (BMD)', 'Brunei Dollar (BND)', 'Bolivian Boliviano (BOB)',
+            'Brazilian Real (BRL)', 'Bahamian Dollar (BSD)', 'Bitcoin (BTC)', 'Bhutanese Ngultrum (BTN)', 'Botswanan Pula (BWP)',
+            'Belarusian Ruble (BYR)', 'Belize Dollar (BZD)', 'Canadian Dollar (CAD)', 'Congolese Franc (CDF)', 'Swiss Franc (CHF)',
+            'Chilean Unit of Account (UF) (CLF)', 'Chilean Peso (CLP)', 'Chinese Yuan (CNY)', 'Colombian Peso (COP)', 'Costa Rican Colón (CRC)',
+            'Cuban Convertible Peso (CUC)', 'Cuban Peso (CUP)', 'Cape Verdean Escudo (CVE)', 'Czech Republic Koruna (CZK)', 'Djiboutian Franc (DJF)',
+            'Danish Krone (DKK)', 'Dominican Peso (DOP)', 'Algerian Dinar (DZD)', 'Egyptian Pound (EGP)', 'Eritrean Nakfa (ERN)',
+            'Ethiopian Birr (ETB)', 'Euro (EUR)', 'Fijian Dollar (FJD)', 'Falkland Islands Pound (FKP)', 'British Pound Sterling (GBP)',
+            'Georgian Lari (GEL)', 'Guernsey Pound (GGP)', 'Ghanaian Cedi (GHS)', 'Gibraltar Pound (GIP)', 'Gambian Dalasi (GMD)',
+            'Guinean Franc (GNF)', 'Guatemalan Quetzal (GTQ)', 'Guyanaese Dollar (GYD)', 'Hong Kong Dollar (HKD)', 'Honduran Lempira (HNL)',
+            'Croatian Kuna (HRK)', 'Haitian Gourde (HTG)', 'Hungarian Forint (HUF)', 'Indonesian Rupiah (IDR)', 'Israeli New Sheqel (ILS)',
+            'Manx pound (IMP)', 'Indian Rupee (INR)', 'Iraqi Dinar (IQD)', 'Iranian Rial (IRR)', 'Icelandic Króna (ISK)', 'Jersey Pound (JEP)',
+            'Jamaican Dollar (JMD)', 'Jordanian Dinar (JOD)', 'Japanese Yen (JPY)', 'Kenyan Shilling (KES)', 'Kyrgystani Som (KGS)',
+            'Cambodian Riel (KHR)', 'Comorian Franc (KMF)', 'North Korean Won (KPW)', 'South Korean Won (KRW)', 'Kuwaiti Dinar (KWD)',
+            'Cayman Islands Dollar (KYD)', 'Kazakhstani Tenge (KZT)', 'Laotian Kip (LAK)', 'Lebanese Pound (LBP)', 'Sri Lankan Rupee (LKR)',
+            'Liberian Dollar (LRD)', 'Lesotho Loti (LSL)', 'Lithuanian Litas (LTL)', 'Latvian Lats (LVL)', 'Libyan Dinar (LYD)',
+            'Moroccan Dirham (MAD)', 'Moldovan Leu (MDL)', 'Malagasy Ariary (MGA)', 'Macedonian Denar (MKD)', 'Myanma Kyat (MMK)',
+            'Mongolian Tugrik (MNT)', 'Macanese Pataca (MOP)', 'Mauritanian Ouguiya (MRO)', 'Mauritian Rupee (MUR)', 'Maldivian Rufiyaa (MVR)',
+            'Malawian Kwacha (MWK)', 'Mexican Peso (MXN)', 'Malaysian Ringgit (MYR)', 'Mozambican Metical (MZN)', 'Namibian Dollar (NAD)',
+            'Nigerian Naira (NGN)', 'Nicaraguan Córdoba (NIO)', 'Norwegian Krone (NOK)', 'Nepalese Rupee (NPR)', 'New Zealand Dollar (NZD)',
+            'Omani Rial (OMR)', 'Panamanian Balboa (PAB)', 'Peruvian Nuevo Sol (PEN)', 'Papua New Guinean Kina (PGK)', 'Philippine Peso (PHP)',
+            'Pakistani Rupee (PKR)', 'Polish Zloty (PLN)', 'Paraguayan Guarani (PYG)', 'Qatari Rial (QAR)', 'Romanian Leu (RON)',
+            'Serbian Dinar (RSD)', 'Russian Ruble (RUB)', 'Rwandan Franc (RWF)', 'Saudi Riyal (SAR)', 'Solomon Islands Dollar (SBD)',
+            'Seychellois Rupee (SCR)', 'Sudanese Pound (SDG)', 'Swedish Krona (SEK)', 'Singapore Dollar (SGD)', 'Saint Helena Pound (SHP)',
+            'Sierra Leonean Leone (SLL)', 'Somali Shilling (SOS)', 'Surinamese Dollar (SRD)', 'São Tomé and Príncipe Dobra (STD)',
+            'Salvadoran Colón (SVC)', 'Syrian Pound (SYP)', 'Swazi Lilangeni (SZL)', 'Thai Baht (THB)', 'Tajikistani Somoni (TJS)',
+            'Turkmenistani Manat (TMT)', 'Tunisian Dinar (TND)', 'Tongan Paʻanga (TOP)', 'Turkish Lira (TRY)', 'Trinidad and Tobago Dollar (TTD)',
+            'New Taiwan Dollar (TWD)', 'Tanzanian Shilling (TZS)', 'Ukrainian Hryvnia (UAH)', 'Ugandan Shilling (UGX)', 'United States Dollar (USD)',
+            'Uruguayan Peso (UYU)', 'Uzbekistan Som (UZS)', 'Venezuelan Bolívar (VEF)', 'Vietnamese Dong (VND)', 'Vanuatu Vatu (VUV)',
+            'Samoan Tala (WST)', 'CFA Franc BEAC (XAF)', 'Silver (troy ounce) (XAG)', 'Gold (troy ounce) (XAU)', 'East Caribbean Dollar (XCD)',
+            'Special Drawing Rights (XDR)', 'CFA Franc BCEAO (XOF)', 'CFP Franc (XPF)', 'Yemeni Rial (YER)', 'South African Rand (ZAR)',
+            'Zambian Kwacha (ZMK)', 'Zambian Kwacha (ZMW)', 'Zimbabwean Dollar (ZWL)'
+        ],
+        'payment_information.payment_method': ['Bank Transfer', 'PayPal', 'Stripe', 'Wise', 'Cryptocurrency', 'Cheque'],
+        'payment_information.invoicing_cycle': ['Weekly', 'Biweekly', 'Monthly', 'Quarterly'],
+        'teaching_areas.level_of_expertise': ['Beginner', 'Intermediate', 'Advanced', 'Expert']
+
+    };
+
+    const checkboxFields = {
+        'personal_information.preferred_teaching': ['Online', 'Hybrid', 'In-person'],
+        'availability.availability_data.days': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        'teaching_areas.preferred_student_level': ['Undergraduate', 'Postgraduate', 'Professional', 'Other'],
+        'additional_notes.terms_conditions': ['The provided information is true.', 'I give my permission to recruit.']
+    };
+
+    const radioFields = {
+        'payment_information.negotiable': ['Yes', 'No']
+    };
+
+    async function fetchApplicationData() {
+        try {
+            const response = await fetch('/api/view_application', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server returned ${response.status}: ${errorText}`);
+            }
+
+            const data = await response.json();
+            if (data.academic_qualifications && data.academic_qualifications.degree) {
+                data.academic_qualifications.degrees = JSON.parse(data.academic_qualifications.degree || '[]');
+            }
+
+            if (data.teaching_areas && data.teaching_areas.preferred_student_level) {
+                if (Array.isArray(data.teaching_areas.preferred_student_level)) {
+                    data.teaching_areas.preferred_student_level = data.teaching_areas.preferred_student_level;
+                } else if (typeof data.teaching_areas.preferred_student_level === 'string') {
+                    try {
+                        data.teaching_areas.preferred_student_level = JSON.parse(data.teaching_areas.preferred_student_level || '[]');
+                    } catch (e) {
+                        data.teaching_areas.preferred_student_level = data.teaching_areas.preferred_student_level
+                            ? data.teaching_areas.preferred_student_level.split(',').map(v => v.trim()).filter(v => v)
+                            : [];
+                    }
+                } else {
+                    data.teaching_areas.preferred_student_level = [];
+                }
+            } else {
+                data.teaching_areas.preferred_student_level = [];
+            }
+
+            if (data.professional_experience && data.professional_experience.employment_history) {
+                if (Array.isArray(data.professional_experience.employment_history)) {
+                    data.professional_experience.employment_history = data.professional_experience.employment_history;
+                } else if (typeof data.professional_experience.employment_history === 'string') {
+                    try {
+                        data.professional_experience.employment_history = JSON.parse(data.professional_experience.employment_history || '[]');
+                    } catch (e) {
+                        data.professional_experience.employment_history = [];
+                    }
+                } else {
+                    data.professional_experience.employment_history = [];
+                }
+            } else {
+                data.professional_experience = data.professional_experience || {};
+                data.professional_experience.employment_history = [];
+            }
+
+            if (data.sample_teaching_materials && data.sample_teaching_materials.teaching_materials) {
+                if (Array.isArray(data.sample_teaching_materials.teaching_materials)) {
+                    data.sample_teaching_materials.teaching_materials = data.sample_teaching_materials.teaching_materials;
+                } else if (typeof data.sample_teaching_materials.teaching_materials === 'string') {
+                    try {
+                        data.sample_teaching_materials.teaching_materials = JSON.parse(data.sample_teaching_materials.teaching_materials || '[]');
+                    } catch (e) {
+                        data.sample_teaching_materials.teaching_materials = [];
+                    }
+                } else {
+                    data.sample_teaching_materials.teaching_materials = [];
+                }
+            } else {
+                data.sample_teaching_materials = data.sample_teaching_materials || {};
+                data.sample_teaching_materials.teaching_materials = [];
+            }
+            if (data.availability && data.availability.availability_data) {
+                if (typeof data.availability.availability_data === 'string') {
+                    try {
+                        data.availability.availability_data = JSON.parse(data.availability.availability_data || '{}');
+                    } catch (e) {
+                        data.availability.availability_data = {};
+                    }
+                }
+            } else {
+                data.availability = data.availability || {};
+                data.availability.availability_data = {};
+            }
+
+            if (data.additional_notes) {
+                if (typeof data.additional_notes.certificates === 'string') {
+                    try {
+                        data.additional_notes.certificates = JSON.parse(data.additional_notes.certificates || '[]');
+                    } catch (e) {
+                        data.additional_notes.certificates = [];
+                    }
+                }
+                if (typeof data.additional_notes.publications === 'string') {
+                    try {
+                        data.additional_notes.publications = JSON.parse(data.additional_notes.publications || '[]');
+                    } catch (e) {
+                        data.additional_notes.publications = [];
+                    }
+                }
+                if (typeof data.additional_notes.technology_tools === 'string') {
+                    data.additional_notes.technology_tools = data.additional_notes.technology_tools
+                        ? data.additional_notes.technology_tools.split(',').map(t => t.trim()).filter(t => t)
+                        : [];
+                }
+            } else {
+                data.additional_notes = {
+                    teaching_philosophy: '',
+                    constraints: '',
+                    interests_hobbies: '',
+                    technology_tools: [],
+                    certificates: [],
+                    publications: []
+                };
+            }
+
+
+
+            originalData = structuredClone(data);
+            console.log('Fetched Data:', data);
+            displayApplicationData(data, isEditing);
+            if (data.identification?.picture_path) {
+                const profilePic = document.getElementById('profilePicture');
+                profilePic.src = data.identification.picture_path.replace(/\\/g, '/');
+                profilePic.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error fetching application data:', error);
+            document.getElementById('applicationData').innerHTML =
+                `<p class="text-red-500 text-center">Error loading application data. Please try again.<br>${error.message}</p>`;
+        }
+    }
+
+
+
+    function fileUploadField(label, fileName, fieldPath, editable = false) {
+        const normalizedPath = fileName ? fileName.replace(/\\/g, '/') : null;
+        let accept;
+        if (fieldPath.includes('identification')) {
+            accept = 'image/png,image/jpeg';
+        } else if (fieldPath.includes('teaching_video')) {
+            accept = 'video/mp4,video/webm';
+        } else {
+            accept = 'application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation,video/mp4,video/webm'; // For teaching materials
+        }
+        if (editable) {
+            return `<div class="field-group">
+                <span class="field-label">${label}:</span>
+                ${normalizedPath ?
+                (label === 'NIC/Passport Image' ?
+                    `<img src="${normalizedPath}" class="nic-image" alt="${label}">
+                     <div class="file-preview">Current: ${normalizedPath.split('/').pop()}</div>` :
+                    `<a href="${normalizedPath}" target="_blank" class="text-blue-600 underline">${normalizedPath.split('/').pop()}</a>
+                     <div class="file-preview">Current: ${normalizedPath.split('/').pop()}</div>`) :
+                '<div class="file-preview">No file uploaded</div>'}
+                <input type="file" class="field-input mt-2" data-field="${fieldPath}" accept="${accept}">
+            </div>`;
+        }
+        if (label === 'NIC/Passport Image' && normalizedPath) {
+            return `<div class="field-group">
+                <span class="field-label">${label}:</span>
+                <img src="${normalizedPath}" class="nic-image" alt="${label}">
+            </div>`;
+        }
+        return `<div class="field-group">
+            <span class="field-label">${label}:</span>
+            ${normalizedPath ? `<a href="${normalizedPath}" target="_blank" class="text-blue-600 underline">${normalizedPath.split('/').pop()}</a>` : '<div class="field-value">No file uploaded</div>'}
+        </div>`;
+    }
+
+
+    function certificatesField(filePath, description, fieldPath, index, editable = false) {
+        let normalizedPath = filePath ? filePath.replace(/\\/g, '/') : null;
+        if (editable) {
+            return `
+            <div class="field-group certificate-field" data-index="${index}">
+                <span class="field-label">Certificate ${index + 1} Description:</span>
+                <textarea class="field-input" data-field="additional_notes.certificates[${index}].description" rows="4">${description || ''}</textarea>
+            </div>
+            <div class="field-group">
+                <span class="field-label">Certificate ${index + 1} File:</span>
+                ${normalizedPath ? `<a href="${normalizedPath}" target="_blank" class="text-blue-600 underline">${normalizedPath.split('/').pop()}</a><div class="file-preview">Current: ${normalizedPath.split('/').pop()}</div>` : '<div class="file-preview">No file uploaded</div>'}
+                <input type="file" class="field-input mt-2" data-field="additional_notes.certificates[${index}].file_path" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
+            </div>
+            `;
+        }
+        return `
+        <div class="field-group certificate-field" data-index="${index}">
+            <span class="field-label">Certificate ${index + 1} Description:</span>
+            <div class="field-value">${description || 'Not provided'}</div>
+        </div>
+        <div class="field-group">
+            <span class="field-label">Certificate ${index + 1} File:</span>
+            ${normalizedPath ? `<a href="${normalizedPath}" target="_blank" class="text-blue-600 underline">${normalizedPath.split('/').pop()}</a>` : '<div class="field-value">No file uploaded</div>'}
+        </div>
+        `;
+    }
+
+    function publicationsField(filePath, description, fieldPath, index, editable = false) {
+        let normalizedPath = filePath ? filePath.replace(/\\/g, '/') : null;
+        if (editable) {
+            return `
+            <div class="field-group publication-field" data-index="${index}">
+                <span class="field-label">Publication ${index + 1} Description:</span>
+                <textarea class="field-input" data-field="additional_notes.publications[${index}].description" rows="4">${description || ''}</textarea>
+            </div>
+            <div class="field-group">
+                <span class="field-label">Publication ${index + 1} File:</span>
+                ${normalizedPath ? `<a href="${normalizedPath}" target="_blank" class="text-blue-600 underline">${normalizedPath.split('/').pop()}</a><div class="file-preview">Current: ${normalizedPath.split('/').pop()}</div>` : '<div class="file-preview">No file uploaded</div>'}
+                <input type="file" class="field-input mt-2" data-field="additional_notes.publications[${index}].file_path" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
+            </div>
+            `;
+        }
+        return `
+        <div class="field-group publication-field" data-index="${index}">
+            <span class="field-label">Publication ${index + 1} Description:</span>
+            <div class="field-value">${description || 'Not provided'}</div>
+        </div>
+        <div class="field-group">
+            <span class="field-label">Publication ${index + 1} File:</span>
+            ${normalizedPath ? `<a href="${normalizedPath}" target="_blank" class="text-blue-600 underline">${normalizedPath.split('/').pop()}</a>` : '<div class="field-value">No file uploaded</div>'}
+        </div>
+        `;
+    }
+
+    function displayApplicationData(data, editable = false) {
+        const container = document.getElementById('applicationData');
+        container.innerHTML = '';
+
+        function section(title, fieldsHtml) {
+            return `
+                <div class="border-t pt-4">
+                    <h2 class="section-title">${title}</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${fieldsHtml}</div>
+                </div>`;
+        }
+
+        function field(label, value, fieldPath, type = 'text') {
+            if (dropdownOptions[fieldPath]) {
+                return dropdownField(label, value, fieldPath, editable);
+            } else if (checkboxFields[fieldPath]) {
+                return checkboxField(label, value, fieldPath, editable);
+            } else if (radioFields[fieldPath]) {
+                return radioField(label, value, fieldPath, editable);
+            } else {
+                return textField(label, value, fieldPath, editable);
+            }
+        }
+
+        function textField(label, value, fieldPath, editable, type = 'text') {
+            if (editable) {
+                if (type === 'textarea') {
+                    return `<div class="field-group">
+                        <span class="field-label">${label}:</span>
+                        <textarea class="field-input" data-field="${fieldPath}" rows="4">${value || ''}</textarea>
+                    </div>`;
+                }
+                if (fieldPath === 'personal_information.username') {
+                    return `<div class="field-group">
+                        <span class="field-label">${label}:</span>
+                        <input type="${type}" class="field-input" data-field="${fieldPath}" value="${value || ''}" readonly>
+                    </div>`;
+                }
+                return `<div class="field-group">
+                    <span class="field-label">${label}:</span>
+                    <input type="${type}" class="field-input" data-field="${fieldPath}" value="${value || ''}">
+                </div>`;
+            }
+            return `<div class="field-group">
+                <span class="field-label">${label}:</span>
+                <div class="field-value">${value || 'Not provided'}</div>
+            </div>`;
+        }
+
+        function dropdownField(label, value, fieldPath, editable) {
+            if (editable) {
+                const options = dropdownOptions[fieldPath].map(option =>
+                    `<option value="${option}" ${value === option ? 'selected' : ''}>${option}</option>`
+                ).join('');
+                return `<div class="field-group">
+                    <span class="field-label">${label}:</span>
+                    <select class="field-input" data-field="${fieldPath}">
+                        <option value="">Select ${label}</option>
+                        ${options}
+                    </select>
+                </div>`;
+            }
+            return `<div class="field-group">
+                <span class="field-label">${label}:</span>
+                <div class="field-value">${value || 'Not provided'}</div>
+            </div>`;
+        }
+
+        function checkboxField(label, value, fieldPath, editable) {
+            let values = [];
+            if (Array.isArray(value)) {
+                values = value;
+            } else if (typeof value === 'string' && value.trim()) {
+                values = value.split(',').map(v => v.trim());
+            }
+            if (editable) {
+                const checkboxes = checkboxFields[fieldPath].map(option =>
+                    `<label class="flex items-center">
+                        <input type="checkbox" class="mr-2" data-field="${fieldPath}" value="${option}" ${values.includes(option) ? 'checked' : ''}>
+                        ${option}
+                    </label>`
+                ).join('');
+                return `<div class="field-group">
+                    <span class="field-label">${label}:</span>
+                    <div class="checkbox-group">${checkboxes}</div>
+                </div>`;
+            }
+            return `<div class="field-group">
+                <span class="field-label">${label}:</span>
+                <div class="field-value">${values.length > 0 ? values.join(', ') : 'Not provided'}</div>
+            </div>`;
+        }
+        function radioField(label, value, fieldPath, editable) {
+            if (editable) {
+                const radios = radioFields[fieldPath].map(option =>
+                    `<label class="flex items-center">
+                        <input type="radio" class="mr-2" name="${fieldPath}" data-field="${fieldPath}" value="${option}" ${value === option ? 'checked' : ''}>
+                        ${option}
+                    </label>`
+                ).join('');
+                return `<div class="field-group">
+                    <span class="field-label">${label}:</span>
+                    <div class="radio-group">${radios}</div>
+                </div>`;
+            }
+            return `<div class="field-group">
+                <span class="field-label">${label}:</span>
+                <div class="field-value">${value || 'Not provided'}</div>
+            </div>`;
+        }
+
+        function arrayField(label, items, fieldPath, subFields, editable) {
+            if (!Array.isArray(items)) {
+                items = [];
+            }
+            const itemHtml = items.length > 0 ? items.map((item, index) => {
+                const subFieldsHtml = Object.entries(subFields).map(([key, type]) => {
+                    const subFieldPath = `${fieldPath}[${index}].${key}`;
+                    const displayLabel = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                    if (type === 'file') {
+                        return fileUploadField(displayLabel, item[key], subFieldPath, editable);
+                    } else if (dropdownOptions[subFieldPath]) {
+                        return dropdownField(displayLabel, item[key], subFieldPath, editable);
+                    } else {
+                        return textField(displayLabel, item[key], subFieldPath, editable, type);
+                    }
+                }).join('');
+                return `<div class="sub-section">
+                        <h3 class="text-sm font-semibold">${label} ${index + 1}</h3>
+                        ${subFieldsHtml}
+                    </div>`;
+            }).join('') : '<div class="field-value">No employment history provided</div>';
+            const addButton = editable ? `<button type="button" class="add-employment-btn" data-field="${fieldPath}">Add Another ${label}</button>` : '';
+            return `<div class="field-group">
+                    <span class="field-label">${label}:</span>
+                    ${itemHtml}
+                    ${addButton}
+                </div>`;
+        }
+
+
+        const personal = data.personal_information || {};
+        const identification = data.identification || {};
+        container.innerHTML += section('Personal Information', `
+            ${field('Professional Title', personal.title, 'personal_information.title')}
+            ${field('Full Name', personal.full_name, 'personal_information.full_name')}
+            ${field('Email Address', personal.username, 'personal_information.username', 'email')}
+            ${field('Phone Number', personal.phone_number, 'personal_information.phone_number', 'tel')}
+            ${field('Date of Birth', personal.dob, 'personal_information.dob', 'date')}
+            ${field('Nationality', personal.Nationality, 'personal_information.Nationality')}
+            ${field('Current Country of Residence', personal.country, 'personal_information.country')}
+            ${field('Languages Spoken', personal.Language, 'personal_information.Language', 'textarea')}
+            ${field('LinkedIn / Professional Profile', personal.profile_link, 'personal_information.profile_link', 'url')}
+            ${field('Skype / Zoom ID', personal.conference_id, 'personal_information.conference_id')}
+            ${field('Work Permit', personal.work_permit, 'personal_information.work_permit')}
+            ${field('Engagement Type', personal.engagement_type, 'personal_information.engagement_type')}
+            ${field('Preferred Teaching Mode', personal.preffered_teaching, 'personal_information.preffered_teaching')}
+            ${fileUploadField('Profile Picture', identification.picture_path, 'identification.picture_path', editable)}
+            ${fileUploadField('NIC/Passport Image', identification.nic_passport_image_path, 'identification.nic_passport_image_path', editable)}
+        `);
+
+        const academic = data.academic_qualifications || {};
+        container.innerHTML += section('Academic Qualifications', `
+            ${arrayField('Degrees', academic.degrees, 'academic_qualifications.degrees', {
+            degree: 'text',
+            field: 'text',
+            grade: 'dropdown',
+            institution: 'text',
+            year: 'number'
+        }, editable)}
+            ${field('Thesis / Research Topic', academic.thesis, 'academic_qualifications.thesis', 'textarea')}
+            ${field('Professional Certifications', academic.certifications, 'academic_qualifications.certifications', 'textarea')}
+            ${field('Online Courses / MOOCs Completed', academic.online_courses, 'academic_qualifications.online_courses', 'textarea')}
+        `);
+
+        const teaching = data.teaching_areas || {};
+        container.innerHTML += section('Teaching Areas', `
+            ${field('Teaching Areas', teaching.teaching_areas, 'teaching_areas.teaching_areas', 'textarea')}
+            ${field('Subjects / Topics', teaching.subjects_topics, 'teaching_areas.subjects_topics', 'textarea')}
+            ${field('Level of Expertise', teaching.level_of_expertise, 'teaching_areas.level_of_expertise')}
+            ${field('Years of Teaching Experience', teaching.years_of_experience, 'teaching_areas.years_of_experience', 'number')}
+            ${field('Preferred Student Level', teaching.preferred_student_level, 'teaching_areas.preferred_student_level')}
+            ${field('Sample Topics for Workshops', teaching.sample_topics, 'teaching_areas.sample_topics', 'textarea')}
+            ${field('Teaching Methodology', teaching.teaching_methodology, 'teaching_areas.teaching_methodology', 'textarea')}
+            ${field('Availability', teaching.availability, 'teaching_areas.availability', 'textarea')}
+        `);
+
+        const prof = data.professional_experience || {};
+        container.innerHTML += section('Professional Experience', `
+            ${arrayField('Employment History', prof.employment_history, 'professional_experience.employment_history', {
+            employer: 'text',
+            jobTitle: 'text',
+            startDate: 'date',
+            endDate: 'date',
+            responsibilities: 'textarea'
+        }, editable)}
+            ${field('Total Years of Professional Experience', prof.total_years_experience, 'professional_experience.total_years_experience', 'number')}
+            ${field('Key Achievements', prof.key_achievements, 'professional_experience.key_achievements', 'textarea')}
+            ${field('Relevant Projects', prof.relevant_projects, 'professional_experience.relevant_projects', 'textarea')}
+        `);
+
+        const mats = data.sample_teaching_materials || {};
+        container.innerHTML += section('Sample Teaching Materials', `
+            ${arrayField('Teaching Materials', mats.teaching_materials, 'sample_teaching_materials.teaching_materials', {
+            materialType: 'dropdown',
+            title: 'text',
+            description: 'textarea',
+            filePath: 'file'
+        }, editable)}
+            ${fileUploadField('Teaching Video', mats.teaching_video, 'sample_teaching_materials.teaching_video', editable)}
+            ${field('Additional Notes', mats.additional_notes, 'sample_teaching_materials.additional_notes', 'textarea')}
+        `);
+
+        const avail = data.availability || {};
+        const availData = avail.availability_data || {};
+        container.innerHTML += section('Availability', `
+            ${field('Engagement Type', availData.engagementType, 'availability.availability_data.engagementType', false)}
+            ${checkboxField('Preferred Days', availData.days || [], 'availability.availability_data.days', false)}
+            ${textField('Time Slots', availData.preferredHours ? availData.preferredHours.join(', ') : '', 'availability.availability_data.preferredHours', false, 'text')}
+            ${textField('Preferred Start Date', availData.startDate, 'availability.availability_data.startDate', false, 'date')}
+            ${dropdownField('Desired Contract Length', availData.contractLength, 'availability.availability_data.contractLength', false)}
+            ${dropdownField('Notice Period', availData.noticePeriod, 'availability.availability_data.noticePeriod', false)}
+            ${dropdownField('Willingness to Travel', availData.willingnessToTravel, 'availability.availability_data.willingnessToTravel', false)}
+            ${textField('Other Ongoing Commitments', availData.commitments, 'availability.availability_data.commitments', false, 'textarea')}
+            ${textField('Additional Notes', avail.additional_notes, 'availability.additional_notes', false, 'textarea')}
+        `);
+
+        const payment = data.payment_information || {};
+        container.innerHTML += section('Payment Information', `
+            ${dropdownField('Preferred Payment Currency', payment.payment_currency, 'payment_information.payment_currency', editable)}
+            ${field('Hourly Per Course Rate', payment.hourly_rate, 'payment_information.hourly_rate', 'number', editable)}
+            ${field('Expected Monthly Rate', payment.monthly_rate, 'payment_information.monthly_rate', 'number', editable)}
+            ${dropdownField('Payment Method', payment.payment_method, 'payment_information.payment_method', editable)}
+            ${radioField('Negotiability', payment.negotiable, 'payment_information.negotiable', editable)}
+            ${dropdownField('Preferred Invoicing Cycle', payment.invoicing_cycle, 'payment_information.invoicing_cycle', editable)}
+        `);
+
+        const notes = data.additional_notes || {};
+        const tools = notes.technology_tools || [];
+        container.innerHTML += section('Additional Notes', `
+            ${(notes.certificates || []).map((cert, index) =>
+            certificatesField(cert.file_path, cert.description, `additional_notes.certificates[${index}]`, index, editable)
+        ).join('')}
+            ${editable ? `<button type="button" class="add-certificate-btn" data-field="additional_notes.certificates">Add Another Certificate</button>` : ''}
+            ${(notes.publications || []).map((pub, index) =>
+            publicationsField(pub.file_path, pub.description, `additional_notes.publications[${index}]`, index, editable)
+        ).join('')}
+            ${editable ? `<button type="button" class="add-publication-btn" data-field="additional_notes.publications">Add Another Publication</button>` : ''}
+            ${field('Teaching Philosophy *', notes.teaching_philosophy, 'additional_notes.teaching_philosophy', 'textarea', editable)}
+            ${tools.map((tool, index) => `
+                <div class="field-group tool-field" data-index="${index}">
+                    <span class="field-label">Technology Tool ${index + 1} *:</span>
+                    ${editable ? `
+                        <input type="text" class="field-input" data-field="additional_notes.technology_tools_${index}" value="${tool || ''}">
+                        <button type="button" class="remove-tool-btn" data-index="${index}">Remove Tool</button>
+                    ` : `<div class="field-value">${tool || 'Not provided'}</div>`}
+                </div>
+            `).join('')}
+            ${editable ? `<button type="button" class="add-tool-btn" data-field="additional_notes.technology_tools">Add Another Tool</button>` : ''}
+            ${field('Constraints *', notes.constraints, 'additional_notes.constraints', 'textarea', editable)}
+            ${field('Additional Interests and Hobbies', notes.interests_hobbies, 'additional_notes.interests_hobbies', 'textarea', editable)}
+
+        `);
+    }
+
+
+    function getNestedValue(obj, path) {
+        return path.split('.').reduce((current, key) => {
+            if (key.includes('[')) {
+                const [arrayKey, index] = key.split(/[\[\]]/).filter(Boolean);
+                return current && current[arrayKey] && current[arrayKey][index] ? current[arrayKey][index] : null;
+            }
+            return current ? current[key] : null;
+        }, obj);
+    }
+
+    function collectFormData() {
+        const formData = new FormData();
+        const changedFields = {};
+        const inputs = document.querySelectorAll('input[data-field], select[data-field], textarea[data-field]');
+
+
+        const requiredFields = [
+            'additional_notes.teaching_philosophy',
+            'additional_notes.constraints',
+            'additional_notes.technology_tools_0'
+        ];
+        let hasErrors = false;
+        const errors = [];
+
+        inputs.forEach(input => {
+            const fieldPath = input.dataset.field;
+            if (fieldPath === 'personal_information.username') return;
+            let originalValue = getNestedValue(originalData, fieldPath);
+            let currentValue;
+
+            if (input.type === 'file') {
+                if (input.files.length > 0) {
+                    formData.append(fieldPath, input.files[0]);
+                    changedFields[fieldPath] = input.files[0].name;
+                }
+            } else if (input.type === 'checkbox') {
+                if (!changedFields[fieldPath]) {
+                    const checked = Array.from(document.querySelectorAll(`input[data-field="${fieldPath}"]:checked`))
+                        .map(cb => cb.value)
+                        .sort()
+                        .join(',');
+                    const originalChecked = Array.isArray(originalValue)
+                        ? originalValue.sort().join(',')
+                        : (typeof originalValue === 'string' ? originalValue : '');
+                    if (checked !== originalChecked) {
+                        formData.append(fieldPath, checked);
+                        changedFields[fieldPath] = checked;
+                    }
+                }
+            } else if (input.type === 'radio') {
+                if (input.checked) {
+                    currentValue = input.value;
+                    if (currentValue !== (originalValue || '')) {
+                        formData.append(fieldPath, currentValue);
+                        changedFields[fieldPath] = currentValue;
+                    }
+                }
+            } else {
+                currentValue = input.value;
+                if (currentValue !== (originalValue || '')) {
+                    formData.append(fieldPath, currentValue);
+                    changedFields[fieldPath] = currentValue;
+                }
+                // Validate required fields
+                if (requiredFields.includes(fieldPath) && !currentValue) {
+                    hasErrors = true;
+                    errors.push(`${fieldPath.split('.').pop().replace('_', ' ')} is required`);
+                }
+            }
+        });
+
+        // Explicitly handle technology_tools to ensure all are collected
+        const tools = [];
+        document.querySelectorAll('.tool-field input[data-field]').forEach(input => {
+            const fieldPath = input.dataset.field;
+            const index = fieldPath.match(/technology_tools_(\d+)/)?.[1];
+            if (index && input.value) {
+                tools[index] = input.value;
+                const originalTool = originalData.additional_notes?.technology_tools?.[index] || '';
+                if (input.value !== originalTool) {
+                    formData.append(fieldPath, input.value);
+                    changedFields[fieldPath] = input.value;
+                }
+            }
+        });
+
+        // Validate at least one technology tool
+        if (!tools.some(t => t)) {
+            hasErrors = true;
+            errors.push('At least one technology tool is required');
+        }
+
+        if (hasErrors) {
+            alert(`Please fill in the required fields:\n${errors.join('\n')}`);
+            throw new Error('Validation failed');
+        }
+
+        console.log('FormData to send:', Object.fromEntries(formData));
+        return { formData, changedFields };
+    }
+
+    document.getElementById('updateApplication').addEventListener('click', () => {
+        isEditing = true;
+        document.getElementById('updateApplication').classList.add('hidden');
+        document.getElementById('submitApplication').classList.add('hidden');
+        document.getElementById('saveUpdates').classList.remove('hidden');
+        displayApplicationData(originalData, isEditing);
+    });
+
+    document.getElementById('saveUpdates').addEventListener('click', async () => {
+        const { formData, changedFields } = collectFormData();
+        if (Object.keys(changedFields).length === 0) {
+            alert('No changes detected.');
+            isEditing = false;
+            document.getElementById('updateApplication').classList.remove('hidden');
+            document.getElementById('submitApplication').classList.remove('hidden');
+            document.getElementById('saveUpdates').classList.add('hidden');
+            displayApplicationData(originalData, isEditing);
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/update_application', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            const result = await response.json();
+            console.log('Update response:', response.status, result); // Debug
+            if (!response.ok) {
+                throw new Error(result.error || `Server returned ${response.status}`);
+            }
+
+            alert(result.message);
+            isEditing = false;
+            document.getElementById('updateApplication').classList.remove('hidden');
+            document.getElementById('submitApplication').classList.remove('hidden');
+            document.getElementById('saveUpdates').classList.add('hidden');
+            await fetchApplicationData();
+        } catch (error) {
+            console.error('Error updating application:', error);
+            alert(`Failed to update application: ${error.message}`);
+            isEditing = false;
+            document.getElementById('updateApplication').classList.remove('hidden');
+            document.getElementById('submitApplication').classList.remove('hidden');
+            document.getElementById('saveUpdates').classList.add('hidden');
+            displayApplicationData(originalData, isEditing);
+        }
+    });
+    document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('add-certificate-btn')) {
+            originalData.additional_notes.certificates.push({ description: '', file_path: '' });
+            displayApplicationData(originalData, true);
+        } else if (event.target.classList.contains('add-publication-btn')) {
+            originalData.additional_notes.publications.push({ description: '', file_path: '' });
+            displayApplicationData(originalData, true);
+        } else if (event.target.classList.contains('add-tool-btn')) {
+            originalData.additional_notes.technology_tools.push('');
+            displayApplicationData(originalData, true);
+        } else if (event.target.classList.contains('remove-tool-btn')) {
+            const index = event.target.dataset.index;
+            originalData.additional_notes.technology_tools.splice(index, 1);
+            displayApplicationData(originalData, true);
+        }
+    });
+
+
+    document.getElementById('submitApplication').addEventListener('click', () => {
+        fetch('/api/generate_pdf', {
+            method: 'GET',
+            credentials: 'include'
+        }).then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error("PDF generation failed.");
+            }
+        }).then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my_application.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            window.location.href = '/dashboard';
+        }).catch(err => {
+            console.error("Error downloading PDF:", err);
+            alert('Failed to download PDF. Please try again.');
+        });
+    });
+
+    fetchApplicationData();
+</script>
+</body>
+</html>

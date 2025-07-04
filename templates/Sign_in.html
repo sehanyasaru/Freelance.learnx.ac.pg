@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign In</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes borderGrow {
+            0% { width: 0%; opacity: 0.5; }
+            100% { width: 100%; opacity: 1; }
+        }
+        @keyframes fadeInIcon {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .form-container {
+            transition: all 0.3s ease;
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .google-banner {
+            background-color: #e6f3fa;
+            color: #1e40af;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#edf2f7] flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md form-container">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Sign In to Your Account</h2>
+
+    <div id="googleBanner" class="google-banner">
+        You are a Google user. You don't need to add a password, just click Sign In.
+    </div>
+
+    <form id="signInForm" class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" name="username" id="username" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                   placeholder="johndoe123" />
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" name="password" id="password"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                   placeholder="********" />
+            <p id="passwordError" class="text-red-500 text-sm mt-1 hidden"></p>
+            <a href="#" id="forgotPassword" class="text-teal-600 text-sm mt-1 block hover:underline">Can't remember the password?</a>
+        </div>
+
+        <p id="errorMessage" class="text-red-500 text-sm hidden"></p>
+
+        <button type="submit"
+                class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">
+            Sign In
+        </button>
+    </form>
+
+    <div class="mt-6 text-center">
+        <p class="text-gray-600">Don't have an account?</p>
+        <button onclick="window.location.href='/signup';"
+                class="mt-2 text-teal-600 hover:underline">
+            Sign Up
+        </button>
+    </div>
+
+    <div id="notification" class="notification-bar hidden">
+        <span id="notificationIcon" class="notification-icon"></span>
+        <span id="notificationMessage"></span>
+    </div>
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('signInForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+    const forgotPassword = document.getElementById('forgotPassword');
+    const googleBanner = document.getElementById('googleBanner');
+
+    // Check if username is a Google user
+    function checkGoogleUser(username) {
+        if (!username) {
+            googleBanner.style.display = 'none';
+            passwordInput.disabled = false;
+            passwordInput.placeholder = '********';
+            return;
+        }
+        fetch('/check_google_user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.is_google_user) {
+                    googleBanner.style.display = 'block';
+                    passwordInput.disabled = true;
+                    passwordInput.placeholder = 'Password not required for Google users';
+                    passwordInput.value = ''; // Clear any entered password
+                    passwordError.classList.add('hidden');
+                } else {
+                    googleBanner.style.display = 'none';
+                    passwordInput.disabled = false;
+                    passwordInput.placeholder = '********';
+                }
+            })
+            .catch(err => {
+                console.error('Error checking Google user:', err);
+                googleBanner.style.display = 'none';
+                passwordInput.disabled = false;
+                passwordInput.placeholder = '********';
+            });
+    }
+
+    // Check Google user status on each username input
+    usernameInput.addEventListener('input', (e) => {
+        const username = e.target.value.trim();
+        checkGoogleUser(username);
+    });
+
+    // Validate password length only for non-Google users
+    form.addEventListener('input', (e) => {
+        if (e.target.name === 'password' && e.target.value && !passwordInput.disabled) {
+            if (e.target.value.length < 8) {
+                passwordError.textContent = 'Password must be at least 8 characters';
+                passwordError.classList.remove('hidden');
+            } else {
+                passwordError.classList.add('hidden');
+            }
+        }
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!username) {
+            showNotification('Username is required.', 'error');
+            return;
+        }
+
+        if (!passwordInput.disabled && (!password || password.length < 8)) {
+            showNotification('Password must be at least 8 characters.', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('username', username);
+        if (password && !passwordInput.disabled) {
+            formData.append('password', password);
+        }
+
+        fetch('/signin', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Server response:', data);
+                if (data.message) {
+                    showNotification('Sign-in successful!', 'success');
+                    setTimeout(() => {
+                        const redirectUrl = data.redirect || '/personal_information';
+                        console.log('Redirecting to:', redirectUrl);
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                } else {
+                    showNotification(data.error || 'Login failed.', 'error');
+                }
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                showNotification('Login failed. Please try again.', 'error');
+            });
+    });
+
+    forgotPassword.addEventListener('click', (e) => {
+        e.preventDefault();
+        setTimeout(() => {
+            window.location.href = '/check-username';
+        }, 200);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX Professional Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom right,#edf2f7, #edf2f7);
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#84CC16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Professional Experience</h2>
+    {% if error %}
+    <p class="error" style="display: block;">{{ error }}</p>
+    {% else %}
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 44.44%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 44.44%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="professionalExperienceForm" class="space-y-4">
+        <div id="employmentContainer">
+            <div class="border-t pt-4 employment-section" data-index="0">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Employment 1</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Employer at</label>
+                        <input type="text" name="employer_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="University of Colombo">
+                        <p id="employer_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Job Title</label>
+                        <input type="text" name="jobTitle_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Lecturer">
+                        <p id="jobTitle_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                        <input type="date" name="startDate_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                        <p id="startDate_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">End Date</label>
+                        <input type="date" name="endDate_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="or select 'Present'">
+                        <p id="endDate_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Responsibilities</label>
+                        <input type="text" name="responsibilities_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Delivered lectures on programming">
+                        <p id="responsibilities_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="addEmployment" class="w-full bg-teal-100 text-teal-700 py-2 px-4 rounded-md hover:bg-teal-200 transition duration-300">Add Another Employment</button>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Total Years of Professional Experience</label>
+            <input type="number" name="totalYearsExperience" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="7">
+            <p id="totalYearsExperienceError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Key Achievements</label>
+            <input type="text" name="keyAchievements" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Published 5 research papers">
+            <p id="keyAchievementsError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Relevant Projects</label>
+            <input type="text" name="relevantProjects" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Developed an e-learning platform">
+            <p id="relevantProjectsError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">Next: Materials</button>
+        <div>
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+    {% endif %}
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('professionalExperienceForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const employmentContainer = document.getElementById('employmentContainer');
+    const addEmploymentButton = document.getElementById('addEmployment');
+    let employmentCount = 1;
+
+    const formData = {
+        employmentHistory: [{ employer: '', jobTitle: '', startDate: '', endDate: '', responsibilities: '' }],
+        totalYearsExperience: '',
+        keyAchievements: '',
+        relevantProjects: ''
+    };
+
+    const errors = {
+        totalYearsExperience: document.getElementById('totalYearsExperienceError'),
+        keyAchievements: document.getElementById('keyAchievementsError'),
+        relevantProjects: document.getElementById('relevantProjectsError')
+    };
+
+    function updateErrorsObject() {
+        Object.keys(errors).forEach(key => {
+            errors[key] = document.getElementById(`${key}Error`);
+        });
+        formData.employmentHistory.forEach((_, index) => {
+            ['employer', 'jobTitle', 'startDate', 'endDate', 'responsibilities'].forEach(field => {
+                errors[`employmentHistory[${index}].${field}`] = document.getElementById(`${field}_${index}_error`);
+            });
+        });
+    }
+
+    employmentContainer.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-employment')) {
+            const index = parseInt(e.target.dataset.index);
+            formData.employmentHistory.splice(index, 1);
+            employmentCount--;
+            e.target.closest('.employment-section').remove();
+            updateErrorsObject();
+        }
+    });
+
+    function addEmployment() {
+        const index = employmentCount++;
+        formData.employmentHistory.push({ employer: '', jobTitle: '', startDate: '', endDate: '', responsibilities: '' });
+        const employmentSection = document.createElement('div');
+        employmentSection.className = 'border-t pt-4 employment-section';
+        employmentSection.dataset.index = index;
+        employmentSection.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Employment ${index + 1}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Employer</label>
+                    <input type="text" name="employer_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="University of Colombo">
+                    <p id="employer_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Job Title</label>
+                    <input type="text" name="jobTitle_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Lecturer">
+                    <p id="jobTitle_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                    <input type="date" name="startDate_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <p id="startDate_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">End Date</label>
+                    <input type="date" name="endDate_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="or select 'Present'">
+                    <p id="endDate_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Responsibilities</label>
+                    <input type="text" name="responsibilities_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Delivered lectures on programming">
+                    <p id="responsibilities_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div class="flex items-end justify-end mt-6">
+                    <button type="button" class="text-red-500 hover:underline remove-employment" data-index="${index}">Remove Employment</button>
+                </div>
+            </div>
+        `;
+        employmentContainer.appendChild(employmentSection);
+        updateErrorsObject();
+    }
+
+    addEmploymentButton.addEventListener('click', addEmployment);
+
+    form.addEventListener('input', (e) => {
+        const { name, value } = e.target;
+        if (name.startsWith('employer_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.employmentHistory[index].employer = value;
+        } else if (name.startsWith('jobTitle_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.employmentHistory[index].jobTitle = value;
+        } else if (name.startsWith('startDate_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.employmentHistory[index].startDate = value;
+        } else if (name.startsWith('endDate_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.employmentHistory[index].endDate = value;
+        } else if (name.startsWith('responsibilities_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.employmentHistory[index].responsibilities = value;
+        } else {
+            formData[name] = value.trim();
+        }
+        validateField(name, formData);
+    });
+
+    function validateField(name, data) {
+        let isValid = true;
+        const errorElement = errors[name] || document.getElementById(`${name}_error`);
+        if (name.startsWith('employer_') || name.startsWith('jobTitle_') || name.startsWith('startDate_') || name.startsWith('endDate_') || name.startsWith('responsibilities_')) {
+            const index = parseInt(name.split('_')[1]);
+            const field = name.split('_')[0];
+            if (!data.employmentHistory[index][field]) {
+                errorElement.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'totalYearsExperience') {
+            if (!data.totalYearsExperience || !/^\d+$/.test(data.totalYearsExperience) || parseInt(data.totalYearsExperience) <= 0) {
+                errorElement.textContent = 'Please enter a positive number';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (!data[name]) {
+            errorElement.textContent = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errorElement.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+    function validateForm() {
+        let isFormValid = true;
+        formData.employmentHistory.forEach((job, index) => {
+            ['employer', 'jobTitle', 'startDate', 'endDate', 'responsibilities'].forEach(field => {
+                if (!validateField(`${field}_${index}`, formData)) {
+                    isFormValid = false;
+                }
+            });
+        });
+        ['totalYearsExperience', 'keyAchievements', 'relevantProjects'].forEach(field => {
+            if (!validateField(field, formData)) {
+                isFormValid = false;
+            }
+        });
+        return isFormValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        updateErrorsObject();
+        if (!validateForm()) {
+            errorMessage.textContent = 'Please fill out all required fields';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        const payload = {
+            employmentHistory: formData.employmentHistory,
+            totalYearsExperience: formData.totalYearsExperience,
+            keyAchievements: formData.keyAchievements,
+            relevantProjects: formData.relevantProjects
+        };
+
+        try {
+            const response = await fetch('/professional_experience', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/sample_teaching_materials';
+                }, 2000);
+            } else {
+                if (response.status === 409 && result.redirect) {
+                    errorMessage.textContent = result.error || 'Information already exists with this username';
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/sample_teaching_materials';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

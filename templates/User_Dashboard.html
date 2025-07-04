@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX - User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes typing {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        .animate-typing {
+            animation: typing 1s infinite;
+        }
+
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .nav-mobile-hidden {
+                display: none;
+            }
+            .nav-mobile-visible {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-600 to-lime-500">
+
+<nav class="bg-teal-700 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex-shrink-0">
+                <h1 class="text-xl font-bold">LearnX Dashboard</h1>
+            </div>
+            <div class="hidden md:flex space-x-4 nav-mobile-hidden">
+                <button onclick="showSection('application-status')" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-600 nav-link" data-section="application-status">View Application Status</button>
+                <button onclick="showSection('chat-hr')" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-600 nav-link" data-section="chat-hr">Chat with HR</button>
+                <button onclick="showSection('profile')" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-600 nav-link" data-section="profile">Profile</button>
+            </div>
+            <div class="md:hidden">
+                <button onclick="toggleNav()" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-teal-600">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-nav" class="md:hidden nav-mobile-hidden flex-col px-2 pt-2 pb-3 space-y-1 sm:px-3 hidden">
+        <button onclick="showSection('application-status'); toggleNav()" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-600 nav-link" data-section="application-status">View Application Status</button>
+        <button onclick="showSection('chat-hr'); toggleNav()" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-600 nav-link" data-section="chat-hr">Chat with HR</button>
+        <button onclick="showSection('profile'); toggleNav()" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-600 nav-link" data-section="profile">Profile</button>
+    </div>
+</nav>
+<div class="flex items-center justify-center min-h-screen py-6">
+
+    <div id="application-status" class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full animate-fade-in">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Application Status</h2>
+        <div class="mb-6">
+            <div class="relative pt-1">
+                <div class="flex mb-2 items-center justify-between">
+                    <span class="text-sm font-medium text-gray-700">Progress: 66.67%</span>
+                </div>
+                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                    <div style="width: 66.67%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+                </div>
+                <div class="flex justify-between">
+                    <div class="text-center">
+                        <div class="w-4 h-4 rounded-full mx-auto bg-teal-600"></div>
+                        <p class="text-sm text-gray-700 mt-1">Received</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-4 h-4 rounded-full mx-auto bg-teal-600"></div>
+                        <p class="text-sm text-gray-700 mt-1">Recruiting Process</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-4 h-4 rounded-full mx-auto bg-gray-300"></div>
+                        <p class="text-sm text-gray-700 mt-1">Selection Process</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mb-6">
+            <button class="py-2 px-4 rounded-md text-white bg-red-600 hover:bg-red-700">Not Selected</button>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">HR Acknowledgment</h3>
+            <p class="text-sm text-gray-600 bg-gray-100 p-4 rounded-md">Your application is under review. We will notify you soon.</p>
+        </div>
+    </div>
+
+
+    <div id="chat-hr" class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full animate-fade-in hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Chat with HR</h2>
+        <div id="chat-container" class="h-96 bg-gradient-to-b from-teal-50 to-white rounded-lg p-4 overflow-y-auto mb-4 shadow-inner border border-teal-200">
+            <div class="mb-3 flex justify-start animate-slide-in">
+                <div class="max-w-xs p-3 rounded-lg shadow-md bg-teal-100 text-gray-800">
+                    <p class="text-sm">Welcome! How can I assist you today?</p>
+                    <p class="text-xs text-gray-400 mt-1" id="initial-timestamp"></p>
+                </div>
+            </div>
+        </div>
+        <div class="flex space-x-2">
+            <input id="chat-input" type="text" class="flex-1 px-4 py-3 border border-teal-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800" placeholder="Ask HR anything..." />
+            <button onclick="sendMessage()" class="py-3 px-6 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition duration-300 flex items-center space-x-2 hover:animate-pulse">
+                <span>Send</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="profile" class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full animate-fade-in hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Profile</h2>
+        <div class="flex flex-col items-center space-y-4">
+            <div class="relative">
+                <img id="profile-photo" src="" class="w-32 h-32 rounded-full object-cover border-4 border-teal-600 hidden" />
+                <svg id="profile-icon" class="w-32 h-32 text-teal-600 bg-gray-100 rounded-full p-4 border-4 border-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <label for="photo-upload" class="absolute bottom-0 right-0 bg-teal-600 text-white p-2 rounded-full cursor-pointer hover:bg-teal-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </label>
+                <input id="photo-upload" type="file" accept="image/*" onchange="updateProfilePhoto()" class="hidden" />
+            </div>
+            <div class="text-center">
+                <h3 class="text-xl font-semibold text-gray-700">Alex Carter</h3>
+                <p class="text-sm text-gray-500">@alexcarter</p>
+            </div>
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700">Bio</label>
+                <textarea id="bio" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Tell us about yourself" rows="4">Dedicated educator with a passion for innovative teaching methods.</textarea>
+            </div>
+            <button onclick="logout()" class="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-300">Logout</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.getElementById('initial-timestamp').textContent = new Date().toLocaleTimeString();
+    showSection('application-status');
+
+    function showSection(sectionId) {
+        document.querySelectorAll('#application-status, #chat-hr, #profile').forEach(el => el.classList.add('hidden'));
+        document.getElementById(sectionId).classList.remove('hidden');
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('bg-teal-600'));
+        document.querySelector(`.nav-link[data-section="${sectionId}"]`).classList.add('bg-teal-600');
+    }
+
+    function toggleNav() {
+        const mobileNav = document.getElementById('mobile-nav');
+        mobileNav.classList.toggle('hidden');
+        mobileNav.classList.toggle('nav-mobile-visible');
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+        if (message) {
+            appendMessage('User', message);
+            input.value = '';
+            appendTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator();
+                appendMessage('HR', `Received: "${message}". How else can I help?`);
+            }, 1500);
+        }
+    }
+
+    function appendMessage(sender, text) {
+        const chatContainer = document.getElementById('chat-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `mb-3 flex ${sender === 'User' ? 'justify-end' : 'justify-start'} animate-slide-in`;
+        messageDiv.innerHTML = `
+        <div class="max-w-xs p-3 rounded-lg shadow-md ${sender === 'User' ? 'bg-teal-600 text-white' : 'bg-teal-100 text-gray-800'}">
+          <p class="text-sm">${text}</p>
+          <p class="text-xs text-gray-400 mt-1">${new Date().toLocaleTimeString()}</p>
+        </div>
+      `;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function appendTypingIndicator() {
+        const chatContainer = document.getElementById('chat-container');
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing-indicator';
+        typingDiv.className = 'flex justify-start mb-3 animate-fade-in';
+        typingDiv.innerHTML = `
+        <div class="bg-teal-100 p-3 rounded-lg shadow-md">
+          <div class="flex space-x-1">
+            <span class="w-2 h-2 bg-teal-600 rounded-full animate-typing"></span>
+            <span class="w-2 h-2 bg-teal-600 rounded-full animate-typing" style="animation-delay: 0.2s;"></span>
+            <span class="w-2 h-2 bg-teal-600 rounded-full animate-typing" style="animation-delay: 0.4s;"></span>
+          </div>
+        </div>
+      `;
+        chatContainer.appendChild(typingDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) typingIndicator.remove();
+    }
+
+    function updateProfilePhoto() {
+        const fileInput = document.getElementById('photo-upload');
+        const profilePhoto = document.getElementById('profile-photo');
+        const profileIcon = document.getElementById('profile-icon');
+        if (fileInput.files[0]) {
+            profilePhoto.src = URL.createObjectURL(fileInput.files[0]);
+            profilePhoto.classList.remove('hidden');
+            profileIcon.classList.add('hidden');
+        }
+    }
+
+    function logout() {
+        alert('Logged out successfully!');
+
+    }
+</script>
+</body>
+</html>

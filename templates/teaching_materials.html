@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnX Sample Teaching Materials</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/css/notification.css">
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    body {
+      min-height: 100vh;
+      background: #edf2f7;
+      display: flex;
+      justify-content: center;
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    .success, .error {
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+    .success {
+      color: #059669;
+      background: #d1fae5;
+    }
+    .error {
+      color: #ef4444;
+      background: #fee2e2;
+    }
+    .form-container {
+      transition: all 0.3s ease;
+      max-width: 600px;
+      padding: 1.5rem;
+      transform: scale(1);
+    }
+    .form-container:hover {
+      transform: scale(1.05);
+    }
+    .progress-bar {
+      transition: width 0.3s ease;
+    }
+    @media (max-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+      .form-container {
+        padding: 1rem;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              400: '#4FD1C5',
+              600: '#2C7A7B',
+              700: '#285E61'
+            },
+            lime: {
+              500: '#84CC16'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Sample Teaching Materials</h2>
+  {% if error %}
+  <p class="error" style="display: block;">{{ error }}</p>
+  {% else %}
+  <div class="mb-6">
+    <div class="relative pt-1">
+      <div class="flex mb-2 items-center justify-between">
+        <span class="text-sm font-medium text-gray-700">Progress: 55.56%</span>
+      </div>
+      <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+        <div style="width: 55.56%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+      </div>
+    </div>
+  </div>
+  <form id="sampleTeachingMaterialsForm" class="space-y-4" enctype="multipart/form-data">
+    <div id="materialsContainer">
+      <div class="border-t pt-4 material-section" data-index="0">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Material 1</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Material Type</label>
+            <select name="materialType_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+              <option value="">Select type</option>
+              <option value="Document">Document</option>
+              <option value="Presentation">Presentation</option>
+              <option value="Video">Video</option>
+              <option value="Other">Other</option>
+            </select>
+            <p id="materialType_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Title</label>
+            <input type="text" name="title_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Introduction to Calculus">
+            <p id="title_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Description</label>
+            <input type="text" name="description_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="A beginner's guide to calculus concepts">
+            <p id="description_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Upload File</label>
+            <input type="file" name="file_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+            <p id="file_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+            <p id="file_0_name" class="text-teal-600 text-sm mt-1 hidden"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" id="addMaterial" class="w-full bg-teal-100 text-teal-700 py-2 px-4 rounded-md hover:bg-teal-200 transition duration-300">Add Another Material</button>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Upload Teaching Video</label>
+      <input type="file" name="teachingVideo" accept="video/mp4,video/webm" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+      <p id="teachingVideoError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+      <p id="teachingVideoName" class="text-teal-600 text-sm mt-1 hidden"></p>
+      <div id="videoPreview" class="mt-2 hidden">
+        <video controls class="w-full max-h-64 rounded-md shadow-md"></video>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Additional Notes (Optional)</label>
+      <input type="text" name="additionalNotes" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Any additional information">
+      <p id="additionalNotesError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+    </div>
+    <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">Next: Certification</button>
+    <div>
+      <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+      <p id="errorMessage" class="error"></p>
+    </div>
+  </form>
+  {% endif %}
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+  const form = document.getElementById('sampleTeachingMaterialsForm');
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+  const materialsContainer = document.getElementById('materialsContainer');
+  const addMaterialButton = document.getElementById('addMaterial');
+  let materialCount = 1;
+
+  const formData = {
+    teachingMaterials: [{ materialType: '', title: '', description: '', file: null }],
+    teachingVideo: null,
+    additionalNotes: ''
+  };
+
+  const errors = {
+    teachingVideo: document.getElementById('teachingVideoError'),
+    additionalNotes: document.getElementById('additionalNotesError')
+  };
+
+  function updateErrorsObject() {
+    Object.keys(errors).forEach(key => {
+      errors[key] = document.getElementById(`${key}Error`);
+    });
+    formData.teachingMaterials.forEach((_, index) => {
+      ['materialType', 'title', 'description', 'file'].forEach(field => {
+        errors[`teachingMaterials[${index}].${field}`] = document.getElementById(`${field}_${index}_error`);
+      });
+    });
+  }
+
+  materialsContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-material')) {
+      const index = parseInt(e.target.dataset.index);
+      formData.teachingMaterials.splice(index, 1);
+      materialCount--;
+      e.target.closest('.material-section').remove();
+      updateErrorsObject();
+    }
+  });
+
+  function addMaterial() {
+    const index = materialCount++;
+    formData.teachingMaterials.push({ materialType: '', title: '', description: '', file: null });
+    const materialSection = document.createElement('div');
+    materialSection.className = 'border-t pt-4 material-section';
+    materialSection.dataset.index = index;
+    materialSection.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Material ${index + 1}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Material Type</label>
+                    <select name="materialType_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                        <option value="">Select type</option>
+                        <option value="Document">Document</option>
+                        <option value="Presentation">Presentation</option>
+                        <option value="Video">Video</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <p id="materialType_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" name="title_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Introduction to Calculus">
+                    <p id="title_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <input type="text" name="description_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="A beginner's guide to calculus concepts">
+                    <p id="description_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Upload File</label>
+                    <input type="file" name="file_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <p id="file_${index}_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    <p id="file_${index}_name" class="text-teal-600 text-sm mt-1 hidden"></p>
+                </div>
+                <div class="flex items-end justify-end mt-6">
+                    <button type="button" class="text-red-500 hover:underline remove-material" data-index="${index}">Remove Material</button>
+                </div>
+            </div>
+        `;
+    materialsContainer.appendChild(materialSection);
+    updateErrorsObject();
+  }
+
+  addMaterialButton.addEventListener('click', addMaterial);
+
+  form.addEventListener('input', (e) => {
+    const { name, value, files } = e.target;
+    if (name.startsWith('materialType_')) {
+      const index = parseInt(name.split('_')[1]);
+      formData.teachingMaterials[index].materialType = value;
+      // Re-validate file if material type changes
+      if (formData.teachingMaterials[index].file) {
+        validateField(`file_${index}`, formData);
+      }
+    } else if (name.startsWith('title_')) {
+      const index = parseInt(name.split('_')[1]);
+      formData.teachingMaterials[index].title = value;
+    } else if (name.startsWith('description_')) {
+      const index = parseInt(name.split('_')[1]);
+      formData.teachingMaterials[index].description = value;
+    } else if (name.startsWith('file_')) {
+      const index = parseInt(name.split('_')[1]);
+      formData.teachingMaterials[index].file = files[0] || null;
+      const fileNameElement = document.getElementById(`file_${index}_name`);
+      if (files[0]) {
+        fileNameElement.textContent = `Selected: ${files[0].name}`;
+        fileNameElement.classList.remove('hidden');
+      } else {
+        fileNameElement.classList.add('hidden');
+      }
+    } else if (name === 'teachingVideo') {
+      formData.teachingVideo = files[0] || null;
+      const videoNameElement = document.getElementById('teachingVideoName');
+      const videoPreview = document.getElementById('videoPreview');
+      const videoElement = videoPreview.querySelector('video');
+      if (files[0]) {
+        videoNameElement.textContent = `Selected: ${files[0].name}`;
+        videoNameElement.classList.remove('hidden');
+        videoPreview.classList.remove('hidden');
+        videoElement.src = URL.createObjectURL(files[0]);
+      } else {
+        videoNameElement.classList.add('hidden');
+        videoPreview.classList.add('hidden');
+        videoElement.src = '';
+      }
+    } else {
+      formData[name] = value.trim();
+    }
+    validateField(name, formData);
+  });
+
+  function validateField(name, data) {
+    let isValid = true;
+    const errorElement = errors[name] || document.getElementById(`${name}_error`);
+    if (name.startsWith('materialType_') || name.startsWith('title_') || name.startsWith('description_') || name.startsWith('file_')) {
+      const index = parseInt(name.split('_')[1]);
+      const field = name.split('_')[0];
+      if (!data.teachingMaterials[index][field]) {
+        errorElement.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+        errorElement.classList.remove('hidden');
+        isValid = false;
+      } else if (field === 'file' && data.teachingMaterials[index].file) {
+        const materialType = data.teachingMaterials[index].materialType;
+        const fileName = data.teachingMaterials[index].file.name.toLowerCase();
+        if (materialType === 'Document' && !fileName.endsWith('.pdf') && !fileName.endsWith('.docx')) {
+          errorElement.textContent = 'Invalid file type. Document must be PDF or DOCX.';
+          errorElement.classList.remove('hidden');
+          isValid = false;
+        } else if (materialType === 'Presentation' && !fileName.endsWith('.pptx')) {
+          errorElement.textContent = 'Invalid file type. Presentation must be PPTX.';
+          errorElement.classList.remove('hidden');
+          isValid = false;
+        } else if (materialType === 'Video' && !fileName.endsWith('.mp4') && !fileName.endsWith('.webm')) {
+          errorElement.textContent = 'Invalid file type. Video must be MP4 or WebM.';
+          errorElement.classList.remove('hidden');
+          isValid = false;
+        } else if (materialType === 'Other' && !fileName) {
+          errorElement.textContent = 'File is required for Other material type.';
+          errorElement.classList.remove('hidden');
+          isValid = false;
+        } else {
+          errorElement.classList.add('hidden');
+        }
+      } else {
+        errorElement.classList.add('hidden');
+      }
+    } else if (name === 'teachingVideo') {
+      if (!data.teachingVideo) {
+        errorElement.textContent = 'Teaching video is required';
+        errorElement.classList.remove('hidden');
+        isValid = false;
+      } else if (data.teachingVideo && !['video/mp4', 'video/webm'].includes(data.teachingVideo.type)) {
+        errorElement.textContent = 'Invalid video type (MP4 or WebM only)';
+        errorElement.classList.remove('hidden');
+        isValid = false;
+      } else {
+        errorElement.classList.add('hidden');
+      }
+    } else if (name !== 'additionalNotes' && !data[name]) {
+      errorElement.textContent = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+      errorElement.classList.remove('hidden');
+      isValid = false;
+    } else {
+      errorElement.classList.add('hidden');
+    }
+    return isValid;
+  }
+
+  function validateForm() {
+    let isFormValid = true;
+    formData.teachingMaterials.forEach((material, index) => {
+      ['materialType', 'title', 'description', 'file'].forEach(field => {
+        if (!validateField(`${field}_${index}`, formData)) {
+          isFormValid = false;
+        }
+      });
+    });
+    if (!validateField('teachingVideo', formData)) {
+      isFormValid = false;
+    }
+    return isFormValid;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+    updateErrorsObject();
+    if (!validateForm()) {
+      errorMessage.textContent = 'Please fill out all required fields correctly';
+      errorMessage.style.display = 'block';
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    const payload = {
+      teachingMaterials: formData.teachingMaterials.map(material => ({
+        materialType: material.materialType,
+        title: material.title,
+        description: material.description,
+        fileName: material.file ? material.file.name : null
+      })),
+      teachingVideo: formData.teachingVideo ? formData.teachingVideo.name : null,
+      additionalNotes: formData.additionalNotes
+    };
+    formDataToSend.append('metadata', JSON.stringify(payload));
+    formData.teachingMaterials.forEach((material, index) => {
+      if (material.file) {
+        formDataToSend.append(`file_${index}`, material.file);
+      }
+    });
+    if (formData.teachingVideo) {
+      formDataToSend.append('teachingVideo', formData.teachingVideo);
+    }
+
+    try {
+      const response = await fetch('/sample_teaching_materials', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = '/availability';
+        }, 2000);
+      } else {
+        if (response.status === 409 && result.redirect) {
+          errorMessage.textContent = result.error || 'Information already exists with this username';
+          errorMessage.style.display = 'block';
+          setTimeout(() => {
+            window.location.href = '/availability';
+          }, 2000);
+        } else {
+          errorMessage.textContent =  response.statusText;
+          errorMessage.style.display = 'block';
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      errorMessage.textContent = 'An error occurred. Please try again.';
+      errorMessage.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

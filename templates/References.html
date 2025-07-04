@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX - Section 9: Additional Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .certificate-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#84CC16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">LearnX - References </h2>
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 100%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 88.89%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="additionalNotesForm" class="space-y-4" enctype="multipart/form-data">
+        <div id="additionalNotesContainer">
+            <div class="border-t pt-4 notes-section" data-index="0">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Additional Notes</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Certificates and Achievements</label>
+                        <div id="certificatesContainer"></div>
+                        <button type="button" id="addCertificate" class="mt-2 bg-teal-600 text-white py-1 px-3 rounded-md hover:bg-teal-700 transition duration-300">Add More Certificates</button>
+                        <p id="certificates_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Publications (Optional)</label>
+                        <div id="publicationsContainer"></div>
+                        <button type="button" id="addPublication" class="mt-2 bg-teal-600 text-white py-1 px-3 rounded-md hover:bg-teal-700 transition duration-300">Add More Publications</button>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Teaching Philosophy</label>
+                        <textarea name="teachingPhilosophy" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" rows="3" required></textarea>
+                        <p id="teachingPhilosophy_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Technology Tools Comfortable to Use</label>
+                        <div id="toolsContainer"></div>
+                        <button type="button" id="addTool" class="mt-2 bg-teal-600 text-white py-1 px-3 rounded-md hover:bg-teal-700 transition duration-300">Add Tool</button>
+                        <button type="button" id="removeTool" class="mt-2 bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 transition duration-300">Remove Tool</button>
+                        <p id="technologyTools_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Constraints</label>
+                        <textarea name="constraints" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" rows="3" placeholder="Example: Limited availability on weekends, requires high-speed internet" required></textarea>
+                        <p id="constraints_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Additional Interests and Hobbies (Optional)</label>
+                        <textarea name="interestsHobbies" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" rows="3" placeholder="Example: Reading, hiking, photography"></textarea>
+                    </div>
+
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Terms and Conditions</label>
+                        <div class="mt-1 space-y-2">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="terms1" value="true" class="mr-2" required>
+                                The provided information is true.
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="terms2" value="true" class="mr-2" required>
+                                I give my permission to recruit.
+                            </label>
+                        </div>
+                        <p id="terms_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">See My Application</button>
+        <div>
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('additionalNotesForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const certificatesContainer = document.getElementById('certificatesContainer');
+    const publicationsContainer = document.getElementById('publicationsContainer');
+    const toolsContainer = document.getElementById('toolsContainer');
+    const addCertificateBtn = document.getElementById('addCertificate');
+    const addPublicationBtn = document.getElementById('addPublication');
+    const addToolBtn = document.getElementById('addTool');
+    const removeToolBtn = document.getElementById('removeTool');
+
+    let certificateCount = 0;
+    let publicationCount = 0;
+    let toolCount = 0;
+
+    let formData = {
+        certificates: [],
+        publications: [],
+        teachingPhilosophy: '',
+        technologyTools: [],
+        constraints: '',
+        interestsHobbies: ''
+    };
+
+    const errors = {
+        certificates: document.getElementById('certificates_error'),
+        teachingPhilosophy: document.getElementById('teachingPhilosophy_error'),
+        technologyTools: document.getElementById('technologyTools_error'),
+        constraints: document.getElementById('constraints_error'),
+        terms: document.getElementById('terms_error')
+    };
+
+    addCertificateBtn.addEventListener('click', () => {
+        const currentIndex = certificateCount;
+
+        const certificateDiv = document.createElement('div');
+        certificateDiv.className = 'certificate-item';
+        certificateDiv.innerHTML = `
+      <textarea name="certificateDesc_${currentIndex}" class="..." rows="2" placeholder="Description of certificate/achievement"></textarea>
+      <input type="file" name="certificateFile_${currentIndex}" accept=".jpg,.jpeg,.png,.pdf,.docx" class="...">
+      <button type="button" class="remove-certificate">Remove</button>
+    `;
+
+        certificatesContainer.appendChild(certificateDiv);
+        formData.certificates[currentIndex] = { description: '', file: null };
+        const fileInput = certificateDiv.querySelector(`input[name="certificateFile_${currentIndex}"]`);
+        fileInput.addEventListener('change', (e) => {
+            formData.certificates[currentIndex].file = e.target.files[0];
+        });
+        const descInput = certificateDiv.querySelector(`textarea[name="certificateDesc_${currentIndex}"]`);
+        descInput.addEventListener('input', (e) => {
+            formData.certificates[currentIndex].description = e.target.value.trim();
+        });
+
+        certificateDiv.querySelector('.remove-certificate').addEventListener('click', () => {
+            certificateDiv.remove();
+            formData.certificates[currentIndex] = null;
+        });
+
+        certificateCount++;
+    });
+
+
+    addPublicationBtn.addEventListener('click', () => {
+        const currentIndex = publicationCount;
+
+        const publicationDiv = document.createElement('div');
+        publicationDiv.className = 'certificate-item';
+        publicationDiv.innerHTML = `
+      <textarea name="publicationDesc_${currentIndex}" class="..." rows="2" placeholder="Description of publication"></textarea>
+      <input type="file" name="publicationFile_${currentIndex}" accept=".jpg,.jpeg,.png,.pdf,.docx" class="...">
+      <button type="button" class="remove-publication">Remove</button>
+    `;
+
+        publicationsContainer.appendChild(publicationDiv);
+        formData.publications[currentIndex] = { description: '', file: null };
+
+        const fileInput = publicationDiv.querySelector(`input[name="publicationFile_${currentIndex}"]`);
+        fileInput.addEventListener('change', (e) => {
+            formData.publications[currentIndex].file = e.target.files[0];
+        });
+
+        const descInput = publicationDiv.querySelector(`textarea[name="publicationDesc_${currentIndex}"]`);
+        descInput.addEventListener('input', (e) => {
+            formData.publications[currentIndex].description = e.target.value.trim();
+        });
+
+        publicationDiv.querySelector('.remove-publication').addEventListener('click', () => {
+            publicationDiv.remove();
+            formData.publications[currentIndex] = null;
+        });
+
+        publicationCount++;
+    });
+
+
+    addToolBtn.addEventListener('click', () => {
+        const toolInput = document.createElement('input');
+        toolInput.type = 'text';
+        toolInput.name = `tool_${toolCount}`;
+        toolInput.className = 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500';
+        toolInput.placeholder = 'Example: Zoom, Google Classroom';
+        toolsContainer.appendChild(toolInput);
+        toolCount++;
+    });
+
+    removeToolBtn.addEventListener('click', () => {
+        if (toolsContainer.children.length > 0) {
+            toolsContainer.removeChild(toolsContainer.lastChild);
+            toolCount--;
+        }
+    });
+
+    form.addEventListener('input', (e) => {
+        const { name, value, type, files } = e.target;
+        if (name.startsWith('certificateDesc_')) {
+            const index = name.split('_')[1];
+            formData.certificates[index] = { description: value, file: files ? files[0] : null };
+        } else if (name.startsWith('publicationDesc_')) {
+            const index = name.split('_')[1];
+            formData.publications[index] = { description: value, file: files ? files[0] : null };
+        } else if (name === 'teachingPhilosophy') {
+            formData.teachingPhilosophy = value.trim();
+            validateField(name, formData);
+        } else if (name.startsWith('tool_')) {
+            const index = name.split('_')[1];
+            formData.technologyTools[index] = value.trim();
+            validateField('technologyTools', formData);
+        } else if (name === 'constraints') {
+            formData.constraints = value.trim();
+            validateField(name, formData);
+        } else if (name === 'interestsHobbies') {
+            formData.interestsHobbies = value.trim();
+        }
+    });
+
+    function validateField(name, data) {
+        let isValid = true;
+        const errorElement = errors[name];
+        if (name === 'teachingPhilosophy' && !data.teachingPhilosophy) {
+            errorElement.textContent = 'Teaching philosophy is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'technologyTools' && !data.technologyTools.some(tool => tool)) {
+            errorElement.textContent = 'At least one technology tool is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'constraints' && !data.constraints) {
+            errorElement.textContent = 'Constraints are required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'certificates' && !data.certificates.some(cert => cert && cert.description)) {
+            errorElement.textContent = 'At least one certificate or achievement is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errorElement.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+    function validateForm() {
+        let isValid = true;
+        ['teachingPhilosophy', 'technologyTools', 'constraints', 'certificates'].forEach(field => {
+            if (!validateField(field, formData)) isValid = false;
+        });
+        const terms1 = form.querySelector('input[name="terms1"]:checked');
+        const terms2 = form.querySelector('input[name="terms2"]:checked');
+        if (!terms1 || !terms2) {
+            errors.terms.textContent = 'Both terms and conditions must be accepted';
+            errors.terms.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errors.terms.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        if (!validateForm()) {
+            errorMessage.textContent = 'Please fill out all required fields correctly';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        const formDataToSend = new FormData();
+        formData.certificates.forEach((cert, index) => {
+            if (cert && cert.description) {
+                formDataToSend.append(`certificateDesc_${index}`, cert.description);
+                if (cert.file) formDataToSend.append(`certificateFile_${index}`, cert.file);
+            }
+        });
+        formData.publications.forEach((pub, index) => {
+            if (pub && pub.description) {
+                formDataToSend.append(`publicationDesc_${index}`, pub.description);
+                if (pub.file) formDataToSend.append(`publicationFile_${index}`, pub.file);
+            }
+        });
+        formDataToSend.append('teachingPhilosophy', formData.teachingPhilosophy);
+        formData.technologyTools.forEach((tool, index) => {
+            if (tool) formDataToSend.append(`tool_${index}`, tool);
+        });
+        formDataToSend.append('constraints', formData.constraints);
+        formDataToSend.append('interestsHobbies', formData.interestsHobbies);
+
+        try {
+            const response = await fetch('/references', {
+                method: 'POST',
+                body: formDataToSend
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/view_application';
+                }, 2000);
+            } else {
+                if (response.status === 409 && result.redirect) {
+                    errorMessage.textContent = result.error || 'Information already exists';
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/view_application';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+
+
+    addCertificateBtn.click();
+    document.addEventListener('DOMContentLoaded', () => {
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX Availability</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .hour-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .hour-controls button {
+            width: 2rem;
+            height: 2rem;
+            background-color: #2C7A7B;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .hour-controls button:hover {
+            background-color: #285E61;
+        }
+        .hour-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#84CC16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Availability</h2>
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 55.56%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 55.56%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="availabilityForm" class="space-y-4">
+        <div id="availabilityContainer">
+            <div class="border-t pt-4 availability-section" data-index="0">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Availability</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Engagement Type</label>
+                        <input type="text" id="engagementType" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed" readonly>
+                    </div>
+                    <div id="daysSection" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700">Preferred Days</label>
+                        <div class="mt-1 grid grid-cols-2 gap-2" id="daysContainer">
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Monday" class="mr-2" id="day_Monday"> Monday</label>
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Tuesday" class="mr-2" id="day_Tuesday"> Tuesday</label>
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Wednesday" class="mr-2" id="day_Wednesday"> Wednesday</label>
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Thursday" class="mr-2" id="day_Thursday"> Thursday</label>
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Friday" class="mr-2" id="day_Friday"> Friday</label>
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Saturday" class="mr-2" id="day_Saturday"> Saturday</label>
+                            <label class="flex items-center"><input type="checkbox" name="days_0" value="Sunday" class="mr-2" id="day_Sunday"> Sunday</label>
+                        </div>
+                        <p id="days_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div id="timeSlotsContainer_0" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700">Time Slots</label>
+                        <div id="timeSlots_0"></div>
+                        <p id="timeSlots_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Preferred Start Date</label>
+                        <input type="date" name="startDate_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                        <p id="startDate_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Desired Contract Length</label>
+                        <select name="contractLength_0" id="contractLength_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select contract length</option>
+                            <option value="3 months">3 months</option>
+                            <option value="6 months">6 months</option>
+                            <option value="12 months">12 months</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="contractLengthOther" name="contractLengthOther" class="mt-2 hidden block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 2 years">
+                        <p id="contractLength_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Notice Period</label>
+                        <select name="noticePeriod_0" id="noticePeriod_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select notice period</option>
+                            <option value="1 week">1 week</option>
+                            <option value="2 weeks">2 weeks</option>
+                            <option value="1 month">1 month</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="noticePeriodOther" name="noticePeriodOther" class="mt-2 hidden block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 2 years">
+                        <p id="noticePeriod_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Willingness to Travel</label>
+                        <select name="willingnessToTravel_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select option</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Limited">Limited</option>
+                        </select>
+                        <p id="willingnessToTravel_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Other Ongoing Commitments</label>
+                        <input type="text" name="commitments_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Describe any other commitments">
+                        <p id="commitments_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div id="preferredHoursSection" class="md:col-span-2 hidden">
+                    <label class="block text-sm font-medium text-gray-700">Weekly Hours Available</label>
+                        <div class="hour-controls">
+                            <button type="button" id="decreaseHour" class="disabled:opacity-50">-</button>
+                            <input type="text" id="weeklyHoursDisplay" class="mt-1 w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-center" value="0" readonly>
+                            <button type="button" id="increaseHour">+</button>
+                        </div>
+                        <div id="preferredHoursContainer" class="mt-2"></div>
+                        <p id="weeklyHours_0_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Additional Notes (Optional)</label>
+            <input type="text" name="additionalNotes" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Any additional availability notes">
+            <p id="additionalNotesError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">Next: Certification</button>
+        <div>
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('availabilityForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const engagementTypeInput = document.getElementById('engagementType');
+    const daysSection = document.getElementById('daysSection');
+    const preferredHoursSection = document.getElementById('preferredHoursSection');
+    const weeklyHoursDisplay = document.getElementById('weeklyHoursDisplay');
+    const increaseHourButton = document.getElementById('increaseHour');
+    const decreaseHourButton = document.getElementById('decreaseHour');
+    const preferredHoursContainer = document.getElementById('preferredHoursContainer');
+
+    let formData = {
+        availability: {
+            days: [],
+            timeSlots: {},
+            weeklyHours: '',
+            startDate: '',
+            contractLength: '',
+            noticePeriod: '',
+            willingnessToTravel: '',
+            commitments: '',
+            preferredHours: []
+        },
+        additionalNotes: ''
+    };
+
+    const errors = {
+        days: document.getElementById('days_0_error'),
+        timeSlots: document.getElementById('timeSlots_0_error'),
+        weeklyHours: document.getElementById('weeklyHours_0_error'),
+        startDate: document.getElementById('startDate_0_error'),
+        contractLength: document.getElementById('contractLength_0_error'),
+        noticePeriod: document.getElementById('noticePeriod_0_error'),
+        willingnessToTravel: document.getElementById('willingnessToTravel_0_error'),
+        commitments: document.getElementById('commitments_0_error'),
+        additionalNotes: document.getElementById('additionalNotesError')
+    };
+
+    async function fetchEngagementType() {
+        console.log("Calling fetchEngagementType()");
+        const username = sessionStorage.getItem('working_email')
+        try {
+            const response = await fetch(`/get_engagement_type?username=${encodeURIComponent(username)}`);
+            const result = await response.json();
+            if (response.ok) {
+                engagementTypeInput.value = result.engagement_type || 'Unknown';
+                formData.availability.engagementType = result.engagement_type || 'Unknown';
+                console.log("Fetched engagement type:", formData.availability.engagementType);
+
+                updateSectionsVisibility();
+            } else {
+                engagementTypeInput.value = 'Unknown';
+                formData.availability.engagementType = 'Unknown';
+            }
+        } catch (error) {
+            console.error('Error fetching engagement type:', error);
+            engagementTypeInput.value = 'Unknown';
+            formData.availability.engagementType = 'Unknown';
+        }
+    }
+    const contractLengthSelect = document.getElementById('contractLength_0');
+    const contractLengthOtherInput = document.getElementById('contractLengthOther');
+
+    const noticePeriodSelect = document.getElementById('noticePeriod_0');
+    const noticePeriodOtherInput = document.getElementById('noticePeriodOther');
+
+    contractLengthSelect.addEventListener('change', () => {
+        if (contractLengthSelect.value === 'Other') {
+            contractLengthOtherInput.classList.remove('hidden');
+            formData.availability.contractLength = '';  // Reset to allow manual input
+        } else {
+            contractLengthOtherInput.classList.add('hidden');
+            formData.availability.contractLength = contractLengthSelect.value;
+        }
+    });
+
+    contractLengthOtherInput.addEventListener('input', () => {
+        formData.availability.contractLength = contractLengthOtherInput.value;
+    });
+
+    noticePeriodSelect.addEventListener('change', () => {
+        if (noticePeriodSelect.value === 'Other') {
+            noticePeriodOtherInput.classList.remove('hidden');
+            formData.availability.noticePeriod = '';
+        } else {
+            noticePeriodOtherInput.classList.add('hidden');
+            formData.availability.noticePeriod = noticePeriodSelect.value;
+        }
+    });
+
+    noticePeriodOtherInput.addEventListener('input', () => {
+        formData.availability.noticePeriod = noticePeriodOtherInput.value;
+    });
+
+
+    function updateSectionsVisibility() {
+        const engagementType = formData.availability.engagementType;
+        if (engagementType === 'Part-time' || engagementType === 'Both') {
+            daysSection.classList.remove('hidden');
+            preferredHoursSection.classList.remove('hidden');
+            const checkboxes = daysSection.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.disabled = false);
+        } else {
+            daysSection.classList.add('hidden');
+            preferredHoursSection.classList.add('hidden');
+            const checkboxes = daysSection.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.disabled = true;
+                cb.checked = false;
+            });
+            formData.availability.days = [];
+            updateTimeSlotsContainer();
+            formData.availability.preferredHours = [];
+            updatePreferredHours();
+        }
+    }
+
+    function updateTimeSlotsContainer() {
+        const timeSlotsContainer = document.getElementById('timeSlotsContainer_0');
+        const timeSlotsDiv = document.getElementById('timeSlots_0');
+        const selectedDays = formData.availability.days;
+
+        if (selectedDays.includes('Sunday')) {
+            timeSlotsContainer.classList.remove('hidden');
+            timeSlotsDiv.innerHTML = selectedDays.map(day => `
+        <div class="mb-2">
+          <label class="block text-sm font-medium text-gray-700">${day} Time Slot</label>
+          <select name="timeSlots_0_${day}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+            <option value="">Select time slot</option>
+            <option value="Morning">Morning (8 AM - 12 PM)</option>
+            <option value="Afternoon">Afternoon (12 PM - 4 PM)</option>
+            <option value="Evening">Evening (4 PM - 8 PM)</option>
+            <option value="Night">Night (8 PM - 12 AM)</option>
+          </select>
+        </div>
+      `).join('');
+        } else {
+            timeSlotsContainer.classList.add('hidden');
+            timeSlotsDiv.innerHTML = '';
+            formData.availability.timeSlots = {};
+        }
+    }
+
+    function updatePreferredHours() {
+        const totalHours = formData.availability.preferredHours.reduce((sum, hour) => sum + (parseInt(hour) || 0), 0);
+        weeklyHoursDisplay.value = totalHours || 0;
+        decreaseHourButton.disabled = totalHours <= 0;
+        validateField('weeklyHours_0', formData);
+    }
+
+    increaseHourButton.addEventListener('click', () => {
+        if (formData.availability.engagementType !== 'Part-time' && formData.availability.engagementType !== 'Both') return;
+        const newHour = prompt('Enter additional working hours (e.g., 1):');
+        if (newHour && /^\d+$/.test(newHour) && parseInt(newHour) > 0) {
+            formData.availability.preferredHours.push(newHour);
+            const hourDiv = document.createElement('div');
+            hourDiv.className = 'hour-item';
+            hourDiv.innerHTML = `
+        <span class="text-teal-600 mr-2">${newHour} hours</span>
+        <button type="button" class="text-red-500 hover:underline remove-hour" data-hour="${newHour}">Remove</button>
+      `;
+            preferredHoursContainer.appendChild(hourDiv);
+            updatePreferredHours();
+
+            hourDiv.querySelector('.remove-hour').addEventListener('click', () => {
+                formData.availability.preferredHours = formData.availability.preferredHours.filter(h => h !== newHour);
+                hourDiv.remove();
+                updatePreferredHours();
+            });
+        }
+    });
+
+    decreaseHourButton.addEventListener('click', () => {
+        if (formData.availability.engagementType !== 'Part-time' && formData.availability.engagementType !== 'Both') return;
+        if (formData.availability.preferredHours.length > 0) {
+            const lastHour = formData.availability.preferredHours.pop();
+            const hourDivs = preferredHoursContainer.querySelectorAll('.hour-item');
+            hourDivs[hourDivs.length - 1].remove();
+            updatePreferredHours();
+        }
+    });
+
+    form.addEventListener('input', (e) => {
+        const { name, value, type, checked } = e.target;
+        if (name.startsWith('days_0') && (formData.availability.engagementType === 'Part-time' || formData.availability.engagementType === 'Both')) {
+            const checkboxes = document.querySelectorAll(`input[name="days_0"]:checked`);
+            formData.availability.days = Array.from(checkboxes).map(cb => cb.value);
+            updateTimeSlotsContainer();
+            validateField('days_0', formData);
+        } else if (name.startsWith('timeSlots_0_')) {
+            const day = name.split('_')[2];
+            formData.availability.timeSlots[day] = value;
+            validateField('timeSlots_0', formData);
+        } else if (name === 'startDate_0') {
+            formData.availability.startDate = value.trim();
+            validateField(name, formData);
+        } else if (name === 'contractLength_0') {
+            formData.availability.contractLength = value;
+            validateField(name, formData);
+        } else if (name === 'noticePeriod_0') {
+            formData.availability.noticePeriod = value;
+            validateField(name, formData);
+        } else if (name === 'willingnessToTravel_0') {
+            formData.availability.willingnessToTravel = value;
+            validateField(name, formData);
+        } else if (name === 'commitments_0') {
+            formData.availability.commitments = value.trim();
+            validateField(name, formData);
+        } else {
+            formData[name] = value.trim();
+            validateField(name, formData);
+        }
+    });
+
+    function validateField(name, data) {
+        let isValid = true;
+        const errorElement = errors[name.split('_')[0]] || errors[name];
+        if (name === 'days_0' && (data.availability.engagementType === 'Part-time' || data.availability.engagementType === 'Both')) {
+            if (!data.availability.days.length) {
+                errorElement.textContent = 'At least one day must be selected';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'timeSlots_0' && data.availability.days.includes('Sunday')) {
+            const missingSlots = data.availability.days.filter(day => !data.availability.timeSlots[day]);
+            if (missingSlots.length) {
+                errorElement.textContent = `Time slot required for: ${missingSlots.join(', ')}`;
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'weeklyHours_0' && (data.availability.engagementType === 'Part-time' || data.availability.engagementType === 'Both')) {
+            const hours = data.availability.preferredHours.reduce((sum, hour) => sum + (parseInt(hour) || 0), 0);
+            if (!hours) {
+                errorElement.textContent = 'Preferred hours are required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'startDate_0') {
+            if (!data.availability.startDate) {
+                errorElement.textContent = 'Preferred start date is required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                const selectedDate = new Date(data.availability.startDate);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (selectedDate < today) {
+                    errorElement.textContent = 'Start date must be today or in the future';
+                    errorElement.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorElement.classList.add('hidden');
+                }
+            }
+        } else if (name === 'contractLength_0') {
+            if (!data.availability.contractLength) {
+                errorElement.textContent = 'Contract length is required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'noticePeriod_0') {
+            if (!data.availability.noticePeriod) {
+                errorElement.textContent = 'Notice period is required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'willingnessToTravel_0') {
+            if (!data.availability.willingnessToTravel) {
+                errorElement.textContent = 'Willingness to travel is required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'commitments_0') {
+            if (!data.availability.commitments) {
+                errorElement.textContent = 'Other commitments are required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name !== 'additionalNotes' && !data[name]) {
+            errorElement.textContent = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errorElement.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+    function validateForm() {
+        let isFormValid = true;
+        ['startDate_0', 'contractLength_0', 'noticePeriod_0', 'willingnessToTravel_0', 'commitments_0'].forEach(field => {
+            if (!validateField(field, formData)) {
+                isFormValid = false;
+            }
+        });
+        if (formData.availability.engagementType === 'Part-time' || formData.availability.engagementType === 'Both') {
+            if (!validateField('days_0', formData)) isFormValid = false;
+            if (!validateField('weeklyHours_0', formData)) isFormValid = false;
+        }
+        if (formData.availability.days.includes('Sunday') && !validateField('timeSlots_0', formData)) {
+            isFormValid = false;
+        }
+        return isFormValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        if (!validateForm()) {
+            errorMessage.textContent = 'Please fill out all required fields correctly';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        const formDataToSend = new FormData();
+        const payload = {
+            availability: {
+                days: formData.availability.days,
+                timeSlots: formData.availability.days.includes('Sunday') ? formData.availability.timeSlots : {},
+                weeklyHours: formData.availability.weeklyHours,
+                startDate: formData.availability.startDate,
+                contractLength: formData.availability.contractLength,
+                noticePeriod: formData.availability.noticePeriod,
+                willingnessToTravel: formData.availability.willingnessToTravel,
+                commitments: formData.availability.commitments,
+                preferredHours: formData.availability.preferredHours,
+                engagementType: formData.availability.engagementType
+            },
+            additionalNotes: formData.additionalNotes
+        };
+        formDataToSend.append('metadata', JSON.stringify(payload));
+
+        try {
+            const response = await fetch('/availability', {
+                method: 'POST',
+                body: formDataToSend
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/rates';
+                }, 2000);
+            } else {
+                if (response.status === 409 && result.redirect) {
+                    errorMessage.textContent = result.error || 'Information already exists';
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/rates';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        sessionStorage.setItem('working_email', '{{ session.get("working_email") }}');
+        fetchEngagementType();
+    });
+</script>
+</body>
+</html>

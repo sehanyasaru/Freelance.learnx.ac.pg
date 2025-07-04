@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX Splash Screen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            --tw-bg-opacity: 1;
+            background-image: linear-gradient(to bottom right,  #edf2f7, #edf2f7);
+        }
+        @keyframes bounceGlow {
+            0% { transform: scale(0.8); opacity: 0.7; filter: drop-shadow(0 0 0 rgba(52, 211, 153, 0)); }
+            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.7)); }
+            100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.5)); }
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-bounce-glow {
+            animation: bounceGlow 1.5s ease-in-out;
+        }
+
+        .animate-fade-slide-up {
+            animation: fadeSlideUp 1s ease-out forwards;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .overlay {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        @media (max-width: 768px) {
+            .tagline {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+        :root {
+            --teal-400: #4FD1C5;
+            --teal-600: #2C7A7B;
+            --teal-700: #285E61;
+            --lime-500: #84CC16;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+<div class="container flex items-center justify-center min-h-screen px-4">
+    <div class="overlay p-10 rounded-2xl shadow-xl max-w-md w-full text-center">
+        <div class="flex justify-center mb-8">
+            <img
+                    src="static/uploads/logo.png"
+                    alt="LearnX Logo"
+                    class="w-20 h-20 animate-bounce-glow"
+                    onerror="this.src='https://via.placeholder.com/80'; console.error('Failed to load logo at static/logo.png');"
+            />
+        </div>
+        <h1
+                class="tagline text-5xl font-extrabold text-black mb-4 animate-fade-slide-up"
+                style="animation-delay: 0.3s;"
+        >
+            Teach the World with LearnX
+        </h1>
+        <p
+                class="subtitle text-lg text-black mb-8 animate-fade-slide-up"
+                style="animation-delay: 0.6s;"
+        >
+            Connect with learners globally as a freelance lecturer or trainer.
+        </p>
+        <button
+                onclick="window.location.href='/signup'"
+                class="bg-[var(--teal-600)] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[var(--teal-700)] transition duration-300 animate-pulse animate-fade-slide-up"
+                style="animation-delay: 0.9s;"
+        >
+            Get Started
+        </button>
+    </div>
+</div>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    teal: {
+                        400: '#4FD1C5',
+                        600: '#2C7A7B',
+                        700: '#285E61'
+                    },
+                    lime: {
+                        500: '#84CC16'
+                    }
+                }
+            }
+        }
+    };
+</script>
+</body>
+</html>

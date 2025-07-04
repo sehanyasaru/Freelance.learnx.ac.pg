@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX Personal Information</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#edf2f7;'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Personal Information</h2>
+    {% if error %}
+    <p class="error" style="display: block;">{{ error }}</p>
+    {% else %}
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 11.11%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 11.11%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="personalInfoForm" class="space-y-4" enctype="multipart/form-data">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Professional Title</label>
+                <select name="professionalTitle" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <option value="">Select your title</option>
+                    <option value="Mr.">Mr.</option>
+                    <option value="Mrs.">Mrs.</option>
+                    <option value="Ms.">Ms.</option>
+                    <option value="Dr.">Dr.</option>
+                    <option value="Professor">Professor</option>
+                </select>
+                <p id="professionalTitleError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" name="fullName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="John Doe">
+                <p id="fullNameError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input type="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="john.doe@example.com">
+                <p id="emailError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input type="tel" name="phone" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="+1234567890">
+                <p id="phoneError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                <input type="date" name="dateOfBirth" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                <p id="dateOfBirthError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nationality</label>
+                <select name="nationality" id="nationalityDropdown" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <option value="">Select nationality</option>
+                </select>
+                <p id="nationalityError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Current Country of Residence</label>
+                <select id="currentCountry" name="currentCountry" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <option value="">Select country</option>
+                </select>
+                <p id="currentCountryError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Languages Spoken (Select multiple)</label>
+                <select name="languages" multiple class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 h-40 overflow-y-auto">
+                </select>
+                <p id="languagesError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">LinkedIn / Professional Profile (Link)</label>
+                <input type="url" name="linkedIn" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="https://linkedin.com/in/johndoe">
+                <p id="linkedInError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Skype / Zoom ID</label>
+                <input type="text" name="skypeZoom" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="john.doe.zoom">
+                <p id="skypeZoomError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Work Permit</label>
+                <select name="workPermit" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                    <option value="Not Applicable">Not Applicable</option>
+                </select>
+                <p id="workPermitError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Engagement Type</label>
+                <select name="engagementType" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <option value="">Select</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Both">Both</option>
+                </select>
+                <p id="engagementTypeError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Upload Your Picture (PNG, JPG, JPEG)</label>
+                <input type="file" name="picture" accept=".png,.jpg,.jpeg" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                <p id="pictureError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Upload NIC/Passport Image (PNG, JPG, JPEG)</label>
+                <input type="file" name="nicPassportImage" accept=".png,.jpg,.jpeg" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                <p id="nicPassportImageError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Preferred Teaching Mode</label>
+            <div class="mt-2 space-y-2">
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="teachingMode" value="Online" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Online</span>
+                </label>
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="teachingMode" value="Hybrid" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Hybrid</span>
+                </label>
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="teachingMode" value="In-person" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">In-person</span>
+                </label>
+            </div>
+            <p id="teachingModeError" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">
+            Next: Academic Qualifications
+        </button>
+        <div class="col-span-1 md:col-span-2">
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+    {% endif %}
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const countries = [
+        "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Antiguan and Barbudan", "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese", "Bhutanese", "Bolivian", "Bosnian and Herzegovinian", "Botswanan", "Brazilian", "Bruneian", "Bulgarian", "Burkinabe", "Burmese", "Burundian", "Cabo Verdean", "Cambodian", "Cameroonian", "Canadian", "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comoran", "Congolese (Congo-Brazzaville)", "Congolese (Congo-Kinshasa)", "Costa Rican", "Croatian", "Cuban", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican", "Dominican (Republic)", "Dutch", "East Timorese", "Ecuadorean", "Egyptian", "Emirati", "Equatorial Guinean", "Eritrean", "Estonian", "Eswatini", "Ethiopian", "Fijian", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German", "Ghanaian", "Greek", "Grenadian", "Guatemalan", "Guinean", "Guinea-Bissauan", "Guyanese", "Haitian", "Honduran", "Hungarian", "Icelandic", "Indian", "Indonesian", "Iranian", "Iraqi", "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian", "Kazakhstani", "Kenyan", "Kiribati", "Kittitian and Nevisian", "Kuwaiti", "Kyrgyzstani", "Laotian", "Latvian", "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourgish", "Malagasy", "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese", "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian", "Montenegrin", "Moroccan", "Mozambican", "Namibian", "Nauruan", "Nepali", "New Zealander", "Nicaraguan", "Nigerien", "Nigerian", "North Korean", "North Macedonian", "Norwegian", "Omani", "Pakistani", "Palauan", "Palestinian", "Panamanian", "Papua New Guinean", "Paraguayan", "Peruvian", "Philippine", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan", "Saint Lucian", "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi Arabian", "Scottish", "Senegalese", "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovak", "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean", "South Sudanese", "Spanish", "Sri Lankan", "Sudanese", "Surinamese", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese", "Tajikistani", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian and Tobagonian", "Tunisian", "Turkish", "Turkmen", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan", "Uzbekistani", "Vanuatuan", "Vatican", "Venezuelan", "Vietnamese", "Welsh", "Yemeni", "Zambian", "Zimbabwean"
+    ];
+
+    const languages = ["English", "Spanish", "Mandarin", "Hindi", "Arabic", "Portuguese", "Bengali", "Russian", "Japanese", "Punjabi", "German", "Javanese", "Wu", "Malay", "Sinhala", "Telugu", "Vietnamese", "Korean", "French", "Marathi", "Tamil", "Urdu", "Turkish", "Italian", "Yue (Cantonese)", "Thai", "Gujarati", "Jin", "Persian", "Polish", "Pashto", "Kannada", "Xiang", "Malayalam", "Sundanese", "Hausa", "Odia", "Burmese", "Hakka", "Ukrainian", "Bhojpuri", "Tagalog", "Yoruba", "Maithili", "Uzbek", "Sindhi", "Amharic", "Fula", "Romanian", "Oromo", "Igbo", "Azerbaijani", "Awadhi", "Gan", "Cebuano", "Dutch", "Kurdish", "Serbo-Croatian", "Malagasy", "Saraiki", "Nepali", "Sinhalese", "Chittagonian", "Zhuang", "Khmer", "Assamese", "Madurese", "Somali", "Marwari", "Magahi", "Haryanvi", "Hungarian", "Chhattisgarhi", "Greek", "Chewa", "Deccan", "Akan", "Kazakh", "Northern Min", "Sylheti", "Zulu", "Czech", "Kinyarwanda", "Dhundhari", "Haitian Creole", "Eastern Min", "Ilocano", "Quechua", "Swedish", "Hmong", "Shona", "Tigrinya", "Hebrew", "Finnish", "Bulgarian", "Norwegian", "Danish", "Slovak", "Lithuanian", "Latvian", "Slovenian"];
+    const nationality = [
+        "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Antiguan and Barbudan",
+        "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini",
+        "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese", "Bhutanese",
+        "Bolivian", "Bosnian and Herzegovinian", "Botswanan", "Brazilian", "Bruneian", "Bulgarian",
+        "Burkinabe", "Burmese", "Burundian", "Cabo Verdean", "Cambodian", "Cameroonian", "Canadian",
+        "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comoran",
+        "Congolese (Congo-Brazzaville)", "Congolese (Congo-Kinshasa)", "Costa Rican", "Croatian",
+        "Cuban", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican", "Dutch", "East Timorese",
+        "Ecuadorean", "Egyptian", "Emirati", "Equatorial Guinean", "Eritrean", "Estonian", "Eswatini",
+        "Ethiopian", "Fijian", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German",
+        "Ghanaian", "Greek", "Grenadian", "Guatemalan", "Guinean", "Guinea-Bissauan", "Guyanese",
+        "Haitian", "Honduran", "Hungarian", "Icelandic", "Indian", "Indonesian", "Iranian", "Iraqi",
+        "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian", "Kazakhstani",
+        "Kenyan", "Kiribati", "Kittitian and Nevisian", "Kuwaiti", "Kyrgyzstani", "Laotian", "Latvian",
+        "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourgish", "Malagasy",
+        "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese", "Mauritanian",
+        "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian", "Montenegrin",
+        "Moroccan", "Mozambican", "Namibian", "Nauruan", "Nepali", "New Zealander", "Nicaraguan",
+        "Nigerien", "Nigerian", "North Korean", "North Macedonian", "Norwegian", "Omani", "Pakistani",
+        "Palauan", "Palestinian", "Panamanian", "Papua New Guinean", "Paraguayan", "Peruvian",
+        "Philippine", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan", "Saint Lucian",
+        "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi Arabian", "Scottish", "Senegalese",
+        "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovak", "Slovenian",
+        "Solomon Islander", "Somali", "South African", "South Korean", "South Sudanese", "Spanish",
+        "Sri Lankan", "Sudanese", "Surinamese", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese",
+        "Tajikistani", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian and Tobagonian",
+        "Tunisian", "Turkish", "Turkmen", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan",
+        "Uzbekistani", "Vanuatuan", "Vatican", "Venezuelan", "Vietnamese", "Welsh", "Yemeni", "Zambian",
+        "Zimbabwean"
+    ];
+
+    const languageSelect = document.querySelector('select[name="languages"]');
+    languages.forEach(language => {
+        const option = document.createElement('option');
+        option.value = language;
+        option.textContent = language;
+        languageSelect.appendChild(option);
+    });
+
+    const currentCountrySelect = document.getElementById("currentCountry");
+    countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        option.textContent = country;
+        currentCountrySelect.appendChild(option);
+    });
+
+    const nationalitySelect = document.getElementById('nationalityDropdown');
+    nationality.forEach(nationality => {
+        const option = document.createElement('option');
+        option.value = nationality;
+        option.textContent = nationality;
+        nationalitySelect.appendChild(option);
+    });
+</script>
+<script>
+    const form = document.getElementById('personalInfoForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const errors = {
+        professionalTitle: document.getElementById('professionalTitleError'),
+        fullName: document.getElementById('fullNameError'),
+        email: document.getElementById('emailError'),
+        phone: document.getElementById('phoneError'),
+        dateOfBirth: document.getElementById('dateOfBirthError'),
+        nationality: document.getElementById('nationalityError'),
+        currentCountry: document.getElementById('currentCountryError'),
+        languages: document.getElementById('languagesError'),
+        linkedIn: document.getElementById('linkedInError'),
+        skypeZoom: document.getElementById('skypeZoomError'),
+        workPermit: document.getElementById('workPermitError'),
+        engagementType: document.getElementById('engagementTypeError'),
+        teachingMode: document.getElementById('teachingModeError'),
+        picture: document.getElementById('pictureError'),
+        nicPassportImage: document.getElementById('nicPassportImageError')
+    };
+    let formData = {
+        professionalTitle: '',
+        fullName: '',
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        nationality: '',
+        currentCountry: '',
+        languages: [],
+        linkedIn: '',
+        skypeZoom: '',
+        workPermit: '',
+        engagementType: '',
+        teachingMode: [],
+        picture: null,
+        nicPassportImage: null
+    };
+
+    form.addEventListener('input', (e) => {
+        const { name, value, type, multiple, checked, files } = e.target;
+
+        if (name === 'teachingMode') {
+            if (checked) {
+                formData.teachingMode.push(value);
+            } else {
+                formData.teachingMode = formData.teachingMode.filter(mode => mode !== value);
+            }
+        } else if (multiple) {
+            formData[name] = Array.from(e.target.selectedOptions).map(opt => opt.value);
+        } else if (type === 'file') {
+            formData[name] = files[0] || null;
+        } else {
+            formData[name] = value.trim();
+        }
+
+        validateField(name, formData[name]);
+    });
+
+    function validateField(name, value) {
+        const errorElement = errors[name];
+        errorElement.style.display = 'none';
+        errorElement.textContent = '';
+
+        if (!value || (Array.isArray(value) && value.length === 0)) {
+            errorElement.textContent = `${formatFieldLabel(name)} is required.`;
+            errorElement.style.display = 'block';
+            return false;
+        }
+        if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) {
+            errorElement.textContent = 'Please enter a valid email address.';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        if (name === 'phone' && !/^\+?\d{10,15}$/.test(value)) {
+            errorElement.textContent = 'Please enter a valid phone number (10-15 digits, optional +).';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        if (name === 'linkedIn' && value && !/^https?:\/\/.+/.test(value)) {
+            errorElement.textContent = 'Please enter a valid URL.';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        if (name === 'picture' && !value) {
+            errorElement.textContent = 'Please upload a picture (PNG, JPG, JPEG).';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        if (name === 'picture' && value) {
+            const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!validTypes.includes(value.type)) {
+                errorElement.textContent = 'Picture must be PNG, JPG, or JPEG.';
+                errorElement.style.display = 'block';
+                return false;
+            }
+        }
+        if (name === 'nicPassportImage' && !value) {
+            errorElement.textContent = 'Please upload a NIC/Passport image (PNG, JPG, JPEG).';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        if (name === 'nicPassportImage' && value) {
+            const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!validTypes.includes(value.type)) {
+                errorElement.textContent = 'NIC/Passport image must be PNG, JPG, or JPEG.';
+                errorElement.style.display = 'block';
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function formatFieldLabel(field) {
+        return field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+    }
+
+    function validateForm() {
+        let isFormValid = true;
+        let errorMessages = [];
+
+        for (let key in errors) {
+            const value = formData[key];
+            const valid = validateField(key, value);
+            if (!valid) {
+                isFormValid = false;
+                errorMessages.push(errors[key].textContent);
+            }
+        }
+
+        if (errorMessages.length > 0) {
+            errorMessage.innerHTML = errorMessages.join('<br>');
+            errorMessage.style.display = 'block';
+        } else {
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+        }
+
+        return isFormValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        if (!validateForm()) return;
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('title', formData.professionalTitle);
+        formDataToSend.append('full_name', formData.fullName);
+        formDataToSend.append('username', formData.email);
+        formDataToSend.append('phone_number', formData.phone);
+        formDataToSend.append('dob', formData.dateOfBirth);
+        formDataToSend.append('nationality', formData.nationality);
+        formDataToSend.append('country', formData.currentCountry);
+        formDataToSend.append('language', formData.languages.join(', '));
+        formDataToSend.append('profile_link', formData.linkedIn);
+        formDataToSend.append('conference_id', formData.skypeZoom);
+        formDataToSend.append('work_permit', formData.workPermit);
+        formDataToSend.append('engagement_type', formData.engagementType);
+        formDataToSend.append('preferred_teaching', formData.teachingMode.join(', '));
+        formDataToSend.append('picture', formData.picture);
+        formDataToSend.append('nic_passport_image', formData.nicPassportImage);
+
+        for (let [key, value] of formDataToSend.entries()) {
+            console.log(`${key}: ${value instanceof File ? value.name : value}`);
+        }
+
+        try {
+            const response = await fetch('/personal_information', {
+                method: 'POST',
+                body: formDataToSend
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = "/academic_qualifications";
+                }, 2000);
+            } else {
+                if (response.status === 409 && result.redirect) {
+                    errorMessage.textContent = result.error || "Information already exists with this username";
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

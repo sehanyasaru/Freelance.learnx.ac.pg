@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX Teaching Areas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#84CC16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Teaching Areas / Subjects</h2>
+    {% if error %}
+    <p class="error" style="display: block;">{{ error }}</p>
+    {% else %}
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 33.33%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 33.33%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="teachingAreasForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Teaching Areas</label>
+                <input type="text" name="teachingAreas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Mathematics, Computer Science">
+                <p id="teachingAreasError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Subjects / Topics</label>
+                <input type="text" name="subjectsTopics" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Calculus, Programming">
+                <p id="subjectsTopicsError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Level of Expertise</label>
+                <select name="levelOfExpertise" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    <option value="">Select level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Expert">Expert</option>
+                </select>
+                <p id="levelOfExpertiseError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Years of Teaching Experience</label>
+                <input type="number" name="yearsOfExperience" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="5">
+                <p id="yearsOfExperienceError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Preferred Student Level</label>
+            <div class="mt-2 space-y-2">
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="preferredStudentLevel" value="Undergraduate" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Undergraduate</span>
+                </label>
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="preferredStudentLevel" value="Postgraduate" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Postgraduate</span>
+                </label>
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="preferredStudentLevel" value="Professional" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Professional</span>
+                </label>
+                <label class="inline-flex items-center mr-4">
+                    <input type="checkbox" name="preferredStudentLevel" value="Other" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Other</span>
+                </label>
+            </div>
+            <p id="preferredStudentLevelError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Sample Topics for Workshops</label>
+            <input type="text" name="sampleTopics" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Introduction to Python">
+            <p id="sampleTopicsError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Teaching Methodology</label>
+            <input type="text" name="teachingMethodology" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Interactive lectures, hands-on projects">
+            <p id="teachingMethodologyError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Availability</label>
+            <input type="text" name="availability" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Weekdays 9 AM - 5 PM">
+            <p id="availabilityError" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">Next: Professional Experience</button>
+        <div>
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+    {% endif %}
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('teachingAreasForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    const formData = {
+        teachingAreas: '',
+        subjectsTopics: '',
+        levelOfExpertise: '',
+        yearsOfExperience: '',
+        preferredStudentLevel: [],
+        sampleTopics: '',
+        teachingMethodology: '',
+        availability: ''
+    };
+
+    const errors = {
+        teachingAreas: document.getElementById('teachingAreasError'),
+        subjectsTopics: document.getElementById('subjectsTopicsError'),
+        levelOfExpertise: document.getElementById('levelOfExpertiseError'),
+        yearsOfExperience: document.getElementById('yearsOfExperienceError'),
+        preferredStudentLevel: document.getElementById('preferredStudentLevelError'),
+        sampleTopics: document.getElementById('sampleTopicsError'),
+        teachingMethodology: document.getElementById('teachingMethodologyError'),
+        availability: document.getElementById('availabilityError')
+    };
+
+    form.addEventListener('input', (e) => {
+        const { name, value, type, checked } = e.target;
+        if (type === 'checkbox' && name === 'preferredStudentLevel') {
+            if (checked) {
+                formData.preferredStudentLevel.push(value);
+            } else {
+                formData.preferredStudentLevel = formData.preferredStudentLevel.filter(level => level !== value);
+            }
+        } else {
+            formData[name] = value.trim();
+        }
+        validateField(name, formData);
+    });
+
+    function validateField(name, data) {
+        let isValid = true;
+        const errorElement = errors[name];
+        if (name === 'preferredStudentLevel') {
+            if (data.preferredStudentLevel.length === 0) {
+                errorElement.textContent = 'Preferred Student Level is required';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name === 'yearsOfExperience') {
+            if (!data.yearsOfExperience || !/^\d+$/.test(data.yearsOfExperience) || parseInt(data.yearsOfExperience) <= 0) {
+                errorElement.textContent = 'Please enter a positive number';
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (!data[name]) {
+            errorElement.textContent = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errorElement.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+    function validateForm() {
+        let isFormValid = true;
+        ['teachingAreas', 'subjectsTopics', 'levelOfExpertise', 'yearsOfExperience', 'preferredStudentLevel', 'sampleTopics', 'teachingMethodology', 'availability'].forEach(field => {
+            if (!validateField(field, formData)) {
+                isFormValid = false;
+            }
+        });
+        return isFormValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        if (!validateForm()) {
+            errorMessage.textContent = 'Please fill out all required fields';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        const payload = { ...formData };
+
+        try {
+            const response = await fetch('/teaching_areas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/professional_experience';
+                }, 2000);
+            } else {
+                if (response.status === 409 && result.redirect) {
+                    errorMessage.textContent = result.error || 'Information already exists with this username';
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

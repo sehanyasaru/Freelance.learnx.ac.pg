@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX - Payment Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#84CC16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">LearnX - Section 7: Payment Details</h2>
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 77.78%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 77.78%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="paymentForm" class="space-y-4">
+        <div id="paymentContainer">
+            <div class="border-t pt-4 payment-section" data-index="0">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Payment Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Preferred Payment Currency</label>
+                        <select name="paymentCurrency" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select currency</option>
+                            <option value="AED">United Arab Emirates Dirham (AED)</option>
+                            <option value="AFN">Afghan Afghani (AFN)</option>
+                            <option value="ALL">Albanian Lek (ALL)</option>
+                            <option value="AMD">Armenian Dram (AMD)</option>
+                            <option value="ANG">Netherlands Antillean Guilder (ANG)</option>
+                            <option value="AOA">Angolan Kwanza (AOA)</option>
+                            <option value="ARS">Argentine Peso (ARS)</option>
+                            <option value="AUD">Australian Dollar (AUD)</option>
+                            <option value="AWG">Aruban Florin (AWG)</option>
+                            <option value="AZN">Azerbaijani Manat (AZN)</option>
+                            <option value="BAM">Bosnia-Herzegovina Convertible Mark (BAM)</option>
+                            <option value="BBD">Barbadian Dollar (BBD)</option>
+                            <option value="BDT">Bangladeshi Taka (BDT)</option>
+                            <option value="BGN">Bulgarian Lev (BGN)</option>
+                            <option value="BHD">Bahraini Dinar (BHD)</option>
+                            <option value="BIF">Burundian Franc (BIF)</option>
+                            <option value="BMD">Bermudan Dollar (BMD)</option>
+                            <option value="BND">Brunei Dollar (BND)</option>
+                            <option value="BOB">Bolivian Boliviano (BOB)</option>
+                            <option value="BRL">Brazilian Real (BRL)</option>
+                            <option value="BSD">Bahamian Dollar (BSD)</option>
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="BTN">Bhutanese Ngultrum (BTN)</option>
+                            <option value="BWP">Botswanan Pula (BWP)</option>
+                            <option value="BYR">Belarusian Ruble (BYR)</option>
+                            <option value="BZD">Belize Dollar (BZD)</option>
+                            <option value="CAD">Canadian Dollar (CAD)</option>
+                            <option value="CDF">Congolese Franc (CDF)</option>
+                            <option value="CHF">Swiss Franc (CHF)</option>
+                            <option value="CLF">Chilean Unit of Account (UF) (CLF)</option>
+                            <option value="CLP">Chilean Peso (CLP)</option>
+                            <option value="CNY">Chinese Yuan (CNY)</option>
+                            <option value="COP">Colombian Peso (COP)</option>
+                            <option value="CRC">Costa Rican Colón (CRC)</option>
+                            <option value="CUC">Cuban Convertible Peso (CUC)</option>
+                            <option value="CUP">Cuban Peso (CUP)</option>
+                            <option value="CVE">Cape Verdean Escudo (CVE)</option>
+                            <option value="CZK">Czech Republic Koruna (CZK)</option>
+                            <option value="DJF">Djiboutian Franc (DJF)</option>
+                            <option value="DKK">Danish Krone (DKK)</option>
+                            <option value="DOP">Dominican Peso (DOP)</option>
+                            <option value="DZD">Algerian Dinar (DZD)</option>
+                            <option value="EGP">Egyptian Pound (EGP)</option>
+                            <option value="ERN">Eritrean Nakfa (ERN)</option>
+                            <option value="ETB">Ethiopian Birr (ETB)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                            <option value="FJD">Fijian Dollar (FJD)</option>
+                            <option value="FKP">Falkland Islands Pound (FKP)</option>
+                            <option value="GBP">British Pound Sterling (GBP)</option>
+                            <option value="GEL">Georgian Lari (GEL)</option>
+                            <option value="GGP">Guernsey Pound (GGP)</option>
+                            <option value="GHS">Ghanaian Cedi (GHS)</option>
+                            <option value="GIP">Gibraltar Pound (GIP)</option>
+                            <option value="GMD">Gambian Dalasi (GMD)</option>
+                            <option value="GNF">Guinean Franc (GNF)</option>
+                            <option value="GTQ">Guatemalan Quetzal (GTQ)</option>
+                            <option value="GYD">Guyanaese Dollar (GYD)</option>
+                            <option value="HKD">Hong Kong Dollar (HKD)</option>
+                            <option value="HNL">Honduran Lempira (HNL)</option>
+                            <option value="HRK">Croatian Kuna (HRK)</option>
+                            <option value="HTG">Haitian Gourde (HTG)</option>
+                            <option value="HUF">Hungarian Forint (HUF)</option>
+                            <option value="IDR">Indonesian Rupiah (IDR)</option>
+                            <option value="ILS">Israeli New Sheqel (ILS)</option>
+                            <option value="IMP">Manx pound (IMP)</option>
+                            <option value="INR">Indian Rupee (INR)</option>
+                            <option value="IQD">Iraqi Dinar (IQD)</option>
+                            <option value="IRR">Iranian Rial (IRR)</option>
+                            <option value="ISK">Icelandic Króna (ISK)</option>
+                            <option value="JEP">Jersey Pound (JEP)</option>
+                            <option value="JMD">Jamaican Dollar (JMD)</option>
+                            <option value="JOD">Jordanian Dinar (JOD)</option>
+                            <option value="JPY">Japanese Yen (JPY)</option>
+                            <option value="KES">Kenyan Shilling (KES)</option>
+                            <option value="KGS">Kyrgystani Som (KGS)</option>
+                            <option value="KHR">Cambodian Riel (KHR)</option>
+                            <option value="KMF">Comorian Franc (KMF)</option>
+                            <option value="KPW">North Korean Won (KPW)</option>
+                            <option value="KRW">South Korean Won (KRW)</option>
+                            <option value="KWD">Kuwaiti Dinar (KWD)</option>
+                            <option value="KYD">Cayman Islands Dollar (KYD)</option>
+                            <option value="KZT">Kazakhstani Tenge (KZT)</option>
+                            <option value="LAK">Laotian Kip (LAK)</option>
+                            <option value="LBP">Lebanese Pound (LBP)</option>
+                            <option value="LKR">Sri Lankan Rupee (LKR)</option>
+                            <option value="LRD">Liberian Dollar (LRD)</option>
+                            <option value="LSL">Lesotho Loti (LSL)</option>
+                            <option value="LTL">Lithuanian Litas (LTL)</option>
+                            <option value="LVL">Latvian Lats (LVL)</option>
+                            <option value="LYD">Libyan Dinar (LYD)</option>
+                            <option value="MAD">Moroccan Dirham (MAD)</option>
+                            <option value="MDL">Moldovan Leu (MDL)</option>
+                            <option value="MGA">Malagasy Ariary (MGA)</option>
+                            <option value="MKD">Macedonian Denar (MKD)</option>
+                            <option value="MMK">Myanma Kyat (MMK)</option>
+                            <option value="MNT">Mongolian Tugrik (MNT)</option>
+                            <option value="MOP">Macanese Pataca (MOP)</option>
+                            <option value="MRO">Mauritanian Ouguiya (MRO)</option>
+                            <option value="MUR">Mauritian Rupee (MUR)</option>
+                            <option value="MVR">Maldivian Rufiyaa (MVR)</option>
+                            <option value="MWK">Malawian Kwacha (MWK)</option>
+                            <option value="MXN">Mexican Peso (MXN)</option>
+                            <option value="MYR">Malaysian Ringgit (MYR)</option>
+                            <option value="MZN">Mozambican Metical (MZN)</option>
+                            <option value="NAD">Namibian Dollar (NAD)</option>
+                            <option value="NGN">Nigerian Naira (NGN)</option>
+                            <option value="NIO">Nicaraguan Córdoba (NIO)</option>
+                            <option value="NOK">Norwegian Krone (NOK)</option>
+                            <option value="NPR">Nepalese Rupee (NPR)</option>
+                            <option value="NZD">New Zealand Dollar (NZD)</option>
+                            <option value="OMR">Omani Rial (OMR)</option>
+                            <option value="PAB">Panamanian Balboa (PAB)</option>
+                            <option value="PEN">Peruvian Nuevo Sol (PEN)</option>
+                            <option value="PGK">Papua New Guinean Kina (PGK)</option>
+                            <option value="PHP">Philippine Peso (PHP)</option>
+                            <option value="PKR">Pakistani Rupee (PKR)</option>
+                            <option value="PLN">Polish Zloty (PLN)</option>
+                            <option value="PYG">Paraguayan Guarani (PYG)</option>
+                            <option value="QAR">Qatari Rial (QAR)</option>
+                            <option value="RON">Romanian Leu (RON)</option>
+                            <option value="RSD">Serbian Dinar (RSD)</option>
+                            <option value="RUB">Russian Ruble (RUB)</option>
+                            <option value="RWF">Rwandan Franc (RWF)</option>
+                            <option value="SAR">Saudi Riyal (SAR)</option>
+                            <option value="SBD">Solomon Islands Dollar (SBD)</option>
+                            <option value="SCR">Seychellois Rupee (SCR)</option>
+                            <option value="SDG">Sudanese Pound (SDG)</option>
+                            <option value="SEK">Swedish Krona (SEK)</option>
+                            <option value="SGD">Singapore Dollar (SGD)</option>
+                            <option value="SHP">Saint Helena Pound (SHP)</option>
+                            <option value="SLL">Sierra Leonean Leone (SLL)</option>
+                            <option value="SOS">Somali Shilling (SOS)</option>
+                            <option value="SRD">Surinamese Dollar (SRD)</option>
+                            <option value="STD">São Tomé and Príncipe Dobra (STD)</option>
+                            <option value="SVC">Salvadoran Colón (SVC)</option>
+                            <option value="SYP">Syrian Pound (SYP)</option>
+                            <option value="SZL">Swazi Lilangeni (SZL)</option>
+                            <option value="THB">Thai Baht (THB)</option>
+                            <option value="TJS">Tajikistani Somoni (TJS)</option>
+                            <option value="TMT">Turkmenistani Manat (TMT)</option>
+                            <option value="TND">Tunisian Dinar (TND)</option>
+                            <option value="TOP">Tongan Paʻanga (TOP)</option>
+                            <option value="TRY">Turkish Lira (TRY)</option>
+                            <option value="TTD">Trinidad and Tobago Dollar (TTD)</option>
+                            <option value="TWD">New Taiwan Dollar (TWD)</option>
+                            <option value="TZS">Tanzanian Shilling (TZS)</option>
+                            <option value="UAH">Ukrainian Hryvnia (UAH)</option>
+                            <option value="UGX">Ugandan Shilling (UGX)</option>
+                            <option value="USD">United States Dollar (USD)</option>
+                            <option value="UYU">Uruguayan Peso (UYU)</option>
+                            <option value="UZS">Uzbekistan Som (UZS)</option>
+                            <option value="VEF">Venezuelan Bolívar (VEF)</option>
+                            <option value="VND">Vietnamese Dong (VND)</option>
+                            <option value="VUV">Vanuatu Vatu (VUV)</option>
+                            <option value="WST">Samoan Tala (WST)</option>
+                            <option value="XAF">CFA Franc BEAC (XAF)</option>
+                            <option value="XAG">Silver (troy ounce) (XAG)</option>
+                            <option value="XAU">Gold (troy ounce) (XAU)</option>
+                            <option value="XCD">East Caribbean Dollar (XCD)</option>
+                            <option value="XDR">Special Drawing Rights (XDR)</option>
+                            <option value="XOF">CFA Franc BCEAO (XOF)</option>
+                            <option value="XPF">CFP Franc (XPF)</option>
+                            <option value="YER">Yemeni Rial (YER)</option>
+                            <option value="ZAR">South African Rand (ZAR)</option>
+                            <option value="ZMK">Zambian Kwacha (ZMK)</option>
+                            <option value="ZMW">Zambian Kwacha (ZMW)</option>
+                            <option value="ZWL">Zimbabwean Dollar (ZWL)</option>
+                        </select>
+                        <p id="paymentCurrency_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Hourly Per Course Rate</label>
+                        <input type="number" name="hourlyRate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" step="0.01" min="0">
+                        <p id="hourlyRate_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Expected Monthly Rate (Optional)</label>
+                        <input type="number" name="monthlyRate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" step="0.01" min="0" placeholder="Enter expected monthly rate">
+                        <p id="monthlyRate_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Payment Method</label>
+                        <select name="paymentMethod" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select payment method</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="PayPal">PayPal</option>
+                            <option value="Stripe">Stripe</option>
+                            <option value="Wise">Wise</option>
+                            <option value="Cryptocurrency">Cryptocurrency</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                        <p id="paymentMethod_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Negotiability</label>
+                        <div class="mt-1 space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="negotiable" value="Yes" class="mr-2" id="negotiable_yes">
+                                Yes
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="negotiable" value="No" class="mr-2" id="negotiable_no">
+                                No
+                            </label>
+                        </div>
+                        <p id="negotiable_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Preferred Invoicing Cycle</label>
+                        <select name="invoicingCycle" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select invoicing cycle</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Biweekly">Biweekly</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Quarterly">Quarterly</option>
+                        </select>
+                        <p id="invoicingCycle_error" class="text-red-500 text-sm mt-1 hidden animate-fade-in"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">Next: Final Submission</button>
+        <div>
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('paymentForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let formData = {
+        payment: {
+            paymentCurrency: '',
+            hourlyRate: '',
+            monthlyRate: '',
+            paymentMethod: '',
+            negotiable: '',
+            invoicingCycle: ''
+        }
+    };
+
+    const errors = {
+        paymentCurrency: document.getElementById('paymentCurrency_error'),
+        hourlyRate: document.getElementById('hourlyRate_error'),
+        monthlyRate: document.getElementById('monthlyRate_error'),
+        paymentMethod: document.getElementById('paymentMethod_error'),
+        negotiable: document.getElementById('negotiable_error'),
+        invoicingCycle: document.getElementById('invoicingCycle_error')
+    };
+
+    form.addEventListener('input', (e) => {
+        const { name, value, type, checked } = e.target;
+        if (name === 'paymentCurrency') {
+            formData.payment.paymentCurrency = value;
+            validateField(name, formData);
+        } else if (name === 'hourlyRate') {
+            formData.payment.hourlyRate = value.trim();
+            validateField(name, formData);
+        } else if (name === 'monthlyRate') {
+            formData.payment.monthlyRate = value.trim();
+            validateField(name, formData);
+        } else if (name === 'paymentMethod') {
+            formData.payment.paymentMethod = value;
+            validateField(name, formData);
+        } else if (name === 'negotiable' && type === 'radio' && checked) {
+            formData.payment.negotiable = value;
+            validateField(name, formData);
+        } else if (name === 'invoicingCycle') {
+            formData.payment.invoicingCycle = value;
+            validateField(name, formData);
+        }
+    });
+
+    function validateField(name, data) {
+        let isValid = true;
+        const errorElement = errors[name];
+        if (name === 'paymentCurrency' && !data.payment.paymentCurrency) {
+            errorElement.textContent = 'Preferred payment currency is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'hourlyRate' && !data.payment.hourlyRate) {
+            errorElement.textContent = 'Hourly per course rate is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'paymentMethod' && !data.payment.paymentMethod) {
+            errorElement.textContent = 'Payment method is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'negotiable' && !data.payment.negotiable) {
+            errorElement.textContent = 'Negotiability is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else if (name === 'invoicingCycle' && !data.payment.invoicingCycle) {
+            errorElement.textContent = 'Preferred invoicing cycle is required';
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errorElement.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+    function validateForm() {
+        let isFormValid = true;
+        ['paymentCurrency', 'hourlyRate', 'paymentMethod', 'negotiable', 'invoicingCycle'].forEach(field => {
+            if (!validateField(field, formData)) {
+                isFormValid = false;
+            }
+        });
+        return isFormValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        if (!validateForm()) {
+            errorMessage.textContent = 'Please fill out all required fields correctly';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('paymentCurrency', formData.payment.paymentCurrency);
+        formDataToSend.append('hourlyRate', formData.payment.hourlyRate);
+        formDataToSend.append('monthlyRate', formData.payment.monthlyRate);
+        formDataToSend.append('paymentMethod', formData.payment.paymentMethod);
+        formDataToSend.append('negotiable', formData.payment.negotiable);
+        formDataToSend.append('invoicingCycle', formData.payment.invoicingCycle);
+
+        try {
+            const response = await fetch('/rates', {
+                method: 'POST',
+                body: formDataToSend
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/references';
+                }, 2000);
+            } else {
+                if (response.status === 409 && result.redirect) {
+                    errorMessage.textContent = result.error || 'Information already exists';
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/references';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+    });
+</script>
+</body>
+</html>

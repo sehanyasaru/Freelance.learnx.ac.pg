@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnX Academic Qualifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/notification.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            min-height: 100vh;
+            background:#edf2f7;
+            display: flex;
+            justify-content: center;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success, .error {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .success {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .error {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .form-container {
+            transition: all 0.3s ease;
+            max-width: 600px;
+            padding: 1.5rem;
+            transform: scale(1);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            400: '#4FD1C5',
+                            600: '#2C7A7B',
+                            700: '#285E61'
+                        },
+                        lime: {
+                            500: '#84CC16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-teal-400 to-lime-500 flex items-center justify-center">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 max-w-3xl w-full form-container">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Academic Qualifications</h2>
+    {% if error %}
+    <p class="error" style="display: block;">{{ error }}</p>
+    {% else %}
+    <div class="mb-6">
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <span class="text-sm font-medium text-gray-700">Progress: 22.22%</span>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-100">
+                <div style="width: 22.22%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600 progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <form id="academicQualificationsForm" class="space-y-4">
+        <div id="degreesContainer">
+            <div class="border-t pt-4 degree-section" data-index="0">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Degree 1</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                <div>
+                        <label class="block text-sm font-medium text-gray-700">Degree</label>
+                        <input type="text" name="degree_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Master's in Education">
+                        <p id="degree_0_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Field</label>
+                        <input type="text" name="field_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Education Technology">
+                        <p id="field_0_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Institution</label>
+                        <input type="text" name="institution_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="University Name">
+                        <p id="institution_0_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Year</label>
+                        <input type="number" name="year_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="2020">
+                        <p id="year_0_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Grade / Class Obtained</label>
+                        <select name="grade_0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">Select grade/class</option>
+                            <option value="First Class">First Class</option>
+                            <option value="Second Class Upper">Second Class Upper</option>
+                            <option value="Second Class Lower">Second Class Lower</option>
+                            <option value="Third Class">Third Class</option>
+                            <option value="Pass">Pass</option>
+                        </select>
+                        <p id="grade_0_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <button type="button" id="addDegree" class="w-full bg-teal-100 text-teal-700 py-2 px-4 rounded-md hover:bg-teal-200 transition duration-300">Add Another Degree</button>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Thesis / Research Topic (Optional)</label>
+            <input type="text" name="thesis" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Topic of your thesis">
+            <p id="thesisError" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Professional Certifications</label>
+            <input type="text" name="certifications" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Certified Instructional Designer">
+            <p id="certificationsError" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Online Courses / MOOCs Completed</label>
+            <input type="text" name="onlineCourses" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Coursera, edX courses">
+            <p id="onlineCoursesError" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
+        <button type="submit" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300">Next: Teaching Areas</button>
+        <div>
+            <p id="successMessage" class="success">Information submitted successfully! Reloading...</p>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </form>
+    {% endif %}
+</div>
+<script src="/static/js/notification.js"></script>
+<script>
+    const form = document.getElementById('academicQualificationsForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const degreesContainer = document.getElementById('degreesContainer');
+    const addDegreeButton = document.getElementById('addDegree');
+    let degreeCount = 1;
+
+    const formData = {
+        degrees: [{ degree: '', field: '', institution: '', year: '',grade: '' }],
+        thesis: '',
+        certifications: '',
+        onlineCourses: ''
+    };
+
+    const errors = {
+        grade: document.getElementById('gradeError'),
+        thesis: document.getElementById('thesisError'),
+        certifications: document.getElementById('certificationsError'),
+        onlineCourses: document.getElementById('onlineCoursesError')
+    };
+
+    function updateErrorsObject() {
+        Object.keys(errors).forEach(key => {
+            errors[key] = document.getElementById(`${key}Error`);
+        });
+        formData.degrees.forEach((_, index) => {
+            ['degree', 'field', 'institution', 'year'].forEach(field => {
+                errors[`degrees[${index}].${field}`] = document.getElementById(`${field}_${index}_error`);
+            });
+        });
+    }
+    degreesContainer.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-degree')) {
+            const index = parseInt(e.target.dataset.index);
+            formData.degrees.splice(index, 1);
+            degreeCount--;
+            e.target.closest('.degree-section').remove();
+            updateErrorsObject();
+        }
+    });
+
+
+    function addDegree() {
+        const index = degreeCount++;
+        formData.degrees.push({ degree: '', field: '', institution: '', year: '',grade: ''  });
+        const degreeSection = document.createElement('div');
+        degreeSection.className = 'border-t pt-4 degree-section';
+        degreeSection.dataset.index = index;
+        degreeSection.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Degree ${index + 1}</h3>
+            <div class="grid gridCols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Degree</label>
+                    <input type="text" name="degree_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Master's in Education">
+                    <p id="degree_${index}_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Field</label>
+                    <input type="text" name="field_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Education Technology">
+                    <p id="field_${index}_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Institution</label>
+                    <input type="text" name="institution_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="University Name">
+                    <p id="institution_${index}_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Year</label>
+                    <input type="number" name="year_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="2020">
+                    <p id="year_${index}_error" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div>
+            <label class="block text-sm font-medium text-gray-700">Grade / Class Obtained</label>
+            <select name="grade_${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                <option value="">Select grade/class</option>
+                <option value="First Class">First Class</option>
+                <option value="Second Class Upper">Second Class Upper</option>
+                <option value="Second Class Lower">Second Class Lower</option>
+                <option value="Third Class">Third Class</option>
+                <option value="Pass">Pass</option>
+                <option value="Other">Other</option>
+            </select>
+            <p id="grade_${index}_error" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
+        <div class="flex items-end justify-end mt-6">
+            <button type="button" class="text-red-500 hover:underline remove-degree" data-index="${index}">Remove Degree</button>
+        </div>
+            </div>
+        `;
+        degreesContainer.appendChild(degreeSection);
+        updateErrorsObject();
+    }
+
+    addDegreeButton.addEventListener('click', addDegree);
+
+    form.addEventListener('input', (e) => {
+        const { name, value } = e.target;
+        if (name.startsWith('degree_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.degrees[index].degree = value;
+        } else if (name.startsWith('field_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.degrees[index].field = value;
+        } else if (name.startsWith('institution_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.degrees[index].institution = value;
+        } else if (name.startsWith('year_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.degrees[index].year = value;
+        }
+        else if (name.startsWith('grade_')) {
+            const index = parseInt(name.split('_')[1]);
+            formData.degrees[index].grade = value;
+        }
+
+        else {
+            formData[name] = value.trim();
+        }
+        validateField(name, formData);
+    });
+
+    function validateField(name, data) {
+        let isValid = true;
+        const errorElement = errors[name] || document.getElementById(`${name}_error`);
+        if (name.startsWith('degree_') || name.startsWith('field_') || name.startsWith('institution_') || name.startsWith('year_')||name.startsWith('grade_')) {
+            const index = parseInt(name.split('_')[1]);
+            const field = name.split('_')[0];
+            if (!data.degrees[index][field]) {
+                errorElement.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+                errorElement.classList.remove('hidden');
+                isValid = false;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        } else if (name !== 'thesis' && !data[name]) {
+            errorElement.textContent = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+            errorElement.classList.remove('hidden');
+            isValid = false;
+        } else {
+            errorElement.classList.add('hidden');
+        }
+        return isValid;
+    }
+
+    function validateForm() {
+        let isFormValid = true;
+        formData.degrees.forEach((deg, index) => {
+            ['degree', 'field', 'institution', 'year','grade'].forEach(field => {
+                if (!validateField(`${field}_${index}`, formData)) {
+                    isFormValid = false;
+                }
+            });
+        });
+        ['certifications', 'onlineCourses'].forEach(field => {
+            if (!validateField(field, formData)) {
+                isFormValid = false;
+            }
+        });
+        return isFormValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        updateErrorsObject();
+        if (!validateForm()) {
+            errorMessage.textContent = 'Please fill out all required fields';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        const payload = {
+            degrees: formData.degrees,
+            grade: formData.grade,
+            thesis: formData.thesis,
+            certifications: formData.certifications,
+            online_courses: formData.onlineCourses
+        };
+
+        try {
+            const response = await fetch('/academic_qualifications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/teaching_areas';
+                }, 2000);
+            }
+            else{
+                if (response.status === 409 && result.redirect) {
+
+                    errorMessage.textContent = result.error || "Information already exist with this username";
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/teaching_areas';
+                    }, 2000);
+
+                }
+                else {
+                    errorMessage.textContent = result.error || 'Failed to submit information. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
